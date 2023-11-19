@@ -23,6 +23,11 @@ namespace EmpathyKick.Controllers
             return View();
         }
 
+        public IActionResult Register()
+        {
+            return View("Register");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
