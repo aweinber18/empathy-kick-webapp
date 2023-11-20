@@ -1,0 +1,30 @@
+﻿@{
+    // Assuming you have a DbContext for your database
+    var dbContext = new LocalDbContext(); // Replace YourDbContext with your actual DbContext class
+
+    // Retrieve all table names from the database
+    var tableNames = dbContext.Database.GetTableNames();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Table Selection</title>
+</head>
+<body>
+    <form method="post" action="ProcessSelectedTables">
+        <h2>Select up to three tables to view:</h2>
+
+        @for (int i = 0; i < tableNames.Count; i++)
+        {
+            <div>
+                <input type="checkbox" id="table@(i)" name="selectedTables" value="@tableNames[i]">
+                <label for="table@(i)">@tableNames[i]</label>
+            </div>
+        }
+
+        <br />
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
