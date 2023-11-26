@@ -1,6 +1,8 @@
 ﻿using EmpathyKick.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace EmpathyKick.Controllers
 {
@@ -15,7 +17,14 @@ namespace EmpathyKick.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID,o.OrganizationName, LogoFile, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName ORDER BY TotalDonations DESC");
+            using (var context = new 
+                       MyDBContext(new DbContextOptions<MyDBContext>()))
+            {
+                var topOrganizations = context.Database.SqlQuery<Organization>(sql: sql).ToList();
+
+                return View(topOrganizations);
+            }
         }
 
         public IActionResult Privacy()
