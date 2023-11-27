@@ -28,6 +28,16 @@ namespace EmpathyKick.Controllers
             return View("Register");
         }
 
+        public IActionResult EADataView()
+        {
+            return View("EADataView");
+        }
+
+        public IActionResult ColumnNamesView()
+        {
+            return View("ColumnNamesView");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
