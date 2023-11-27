@@ -28,14 +28,19 @@ namespace EmpathyKick.Controllers
             return View("Register");
         }
 
-        public IActionResult EADataView()
+        public IActionResult EATableSelectionView()
         {
-            return View("EADataView");
+            return View("EATableSelectionView");
         }
 
         public IActionResult ColumnNamesView()
         {
-            return View("ColumnNamesView");
+            return View("EAColumnSelectionView");
+        }
+
+        public IActionResult EADataView()
+        {
+            return View("EADataView");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace EmpathyKick.Data
 {
@@ -7,7 +6,8 @@ namespace EmpathyKick.Data
     {
         //Database database = new Database();
         public IList<string> GetTableNames() {
-            return new List<string> { "User", "Address", ""};
+            return new List<string> { "User", "Address", "EmpathyAdmin", "Organization", "OrganizationAdmin",
+                "Card", "CardRegistration", "Tag", "TagRegistration", "Donation", "Invoice", "Product"};
         }
 
         public IList<string> GetColumnNames(IList<string> tables) {
