@@ -9,22 +9,21 @@ namespace EmpathyKick.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly MyDBContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(MyDBContext context, ILogger<HomeController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
             FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID,o.OrganizationName, LogoFile, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName ORDER BY TotalDonations DESC");
-            using (var context = new 
-                       MyDBContext(new DbContextOptions<MyDBContext>()))
-            {
-                var topOrganizations = context.Database.SqlQuery<Organization>(sql: sql).ToList();
 
-                return View(topOrganizations);
-            }
+            var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, sql.GetArguments()).ToList();
+            return View(topOrganizations);
+            
         }
 
         public IActionResult Privacy()

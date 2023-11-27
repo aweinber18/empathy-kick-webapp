@@ -1,5 +1,12 @@
-﻿@{
+﻿@using System.Collections
+@{
     ViewData["Title"] = "Home Page";
+    List<Organization> organizations = new List<Organization>(9);
+    foreach (var organization in Model)
+    {
+        organizations.Add(organization);
+    }
+    Organization[] arr = organizations.ToArray();
 }
 
 <div class="container mt-5">
@@ -11,7 +18,7 @@
                     <div class="card">
                         <div class="card-body">
                             
-                            <h5 class="card-title">Card 1</h5>
+                            <h5 class="card-title">@arr[0].OrganizationName</h5>
 
                         </div>
                     </div>
@@ -84,7 +91,7 @@
                 background-color: black; 
             }
 
-             .carousel-control-next {
+            .carousel-control-next {
                 right: 0;
                 left: auto;
             }
@@ -99,3 +106,4 @@
         </a>
     </div>
 </div>
+

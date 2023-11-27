@@ -1,6 +1,7 @@
 using Azure.Identity;
 using EmpathyKick;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +11,9 @@ builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredent
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 var connection = Environment.GetEnvironmentVariable("DefaultConnection");
-builder.Services.AddDbContext<MyDBContext>(options =>
-options.UseSqlServer(connection));
+builder.Services.AddDbContext<MyDBContext>(options => options.UseSqlServer(connection, options => options.EnableRetryOnFailure()));
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
