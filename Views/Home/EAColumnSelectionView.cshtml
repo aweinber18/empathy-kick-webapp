@@ -13,7 +13,7 @@
         <th bgcolor="lightgrey">&nbsp;</th>
             @foreach (var columnName in columnNames)
             {
-                <th bgcolor="lightgrey">@columnName &nbsp;</th>
+            <th bgcolor="lightgrey">@columnName &nbsp;<input type="checkbox" id="@columnName" name="selectedColumns" value=""></th>
             }
         </tr>
         <tr>
@@ -21,7 +21,7 @@
             @foreach (var columnName in columnNames)
             {
                 <td>
-                    <textarea> </textarea>
+                <textarea> </textarea>
                 </td>
             }
         </tr>
