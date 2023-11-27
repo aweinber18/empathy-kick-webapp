@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmpathyKick
 {
@@ -8,8 +9,8 @@ namespace EmpathyKick
         {
         }
 
-        public DbSet<Organization> Organizations { get; set; }
-        public DbSet<Addresses> Address {get; set; }
+        public DbSet<Organization> Organizations { get; set; } 
+        public DbSet<Addresses> Addresses { get; set; }
         public DbSet<Donations> Donations { get; set; }
         
         
@@ -18,8 +19,9 @@ namespace EmpathyKick
 
     public class Donations
     {
+        [Key]
         public int ReceiptNumber { get; set; }
-        public string Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
         public int OrganizationId { get; set; }
         public string DonorFullName { get; set; }
         public int Amount { get; set; }
@@ -41,6 +43,7 @@ namespace EmpathyKick
 
     public class Addresses
     {
+        [Key]
         public int AddressId { get; set; }
         public string Address { get; set; }
         public string City { get; set; }

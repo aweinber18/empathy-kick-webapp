@@ -19,8 +19,12 @@ namespace EmpathyKick.Controllers
 
         public IActionResult Index()
         {
-            FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID,o.OrganizationName, LogoFile, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName ORDER BY TotalDonations DESC");
+            if (_context.Database.GetDbConnection().State != System.Data.ConnectionState.Open)
+            {
+                _context.Database.GetDbConnection().Open();
+            }
 
+            FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID, o.OrganizationName, LogoFile, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName ORDER BY TotalDonations DESC;");
             var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, sql.GetArguments()).ToList();
             return View(topOrganizations);
             
