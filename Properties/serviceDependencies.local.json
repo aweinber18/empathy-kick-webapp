@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "secrets1": {
+      "secretStore": null,
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/EmpathyKickvault",
+      "type": "secrets.keyVault",
+      "connectionId": "EmpathyDBConnection"
+    },
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ServiceLinker/locations/eastus/connectors/connectionToAzureEmpathyDB_8F16802248",
+      "secretStore": "AzureKeyVault",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/empathykick/databases/EmpathyKickDB",
+      "type": "mssql.azure",
+      "connectionId": "connectionToAzureEmpathyDB",
+      "dynamicId": null
+    }
+  }
+}
