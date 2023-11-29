@@ -2,11 +2,21 @@
 @{
     ViewData["Title"] = "Home Page";
     List<Organization> organizations = new List<Organization>(9);
-    foreach (var organization in Model)
+    Organization[] arr = new Organization[9];
+    @if (Model != null)
+    {    
+        foreach (var organization in Model)
     {
         organizations.Add(organization);
     }
-    Organization[] arr = organizations.ToArray();
+        arr = organizations.ToArray();// Your existing code to iterate over Model
+    }
+    else
+    {
+        Console.WriteLine("\n\n\nnope\n\n\n\n");
+    }
+
+
 }
 
 <div class="container mt-5">
