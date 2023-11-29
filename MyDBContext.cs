@@ -25,10 +25,10 @@ namespace EmpathyKick
         public int OrganizationId { get; set; }
         public string DonorFullName { get; set; }
         public int Amount { get; set; }
-        public string PaymentMethod { get; set; }
-        public int UserId { get; set; }
-        public int CardId { get; set; }
-        public string Frequency { get; set; }
+        public string? PaymentMethod { get; set; }
+        public int? UserId { get; set; }
+        public int? CardId { get; set; }
+        public string? Frequency { get; set; }
 
     }
     public class Organization
@@ -49,9 +49,9 @@ namespace EmpathyKick
         public int OrganizationId { get; set; }
         public string OrganizationName { get; set; }
         public int AddressId { get; set; }
-        public int TaxId { get; set; }
+        public int? TaxId { get; set; }
         public string LogoFile { get; set; }
-        public string ThemeColor { get; set; }
+        public string? ThemeColor { get; set; }
     }
 
     public class Addresses
