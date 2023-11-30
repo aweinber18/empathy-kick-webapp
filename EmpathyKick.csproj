@@ -7,7 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.25" />
+    <None Include="wwwroot\LogoFiles\18ForIsrael%28Custom%29.png" />
+    <None Include="wwwroot\LogoFiles\AliyaInstitute%28Custom%29.jpeg" />
+    <None Include="wwwroot\LogoFiles\BBQ4IDF%28Custom%29.jpeg" />
+    <None Include="wwwroot\LogoFiles\healingHandsJewishHearts.jpeg" />
+    <None Include="wwwroot\LogoFiles\LightUpChicago%28Custom%29.jpeg" />
+    <None Include="wwwroot\LogoFiles\OhrHatorahYeshiva%28Custom%29.jpg" />
+    <None Include="wwwroot\LogoFiles\school%28Custom%29.png" />
+    <None Include="wwwroot\LogoFiles\StandingForIsrael.jpeg" />
+    <None Include="wwwroot\LogoFiles\test%28Custom%29.jpeg" />
+    <None Include="wwwroot\LogoFiles\TzevetHatzolah%28Custom%29.jpeg" />
+    <None Include="wwwroot\LogoFiles\zaka%28Custom%29.jpeg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Core" Version="1.36.0" />
+    <PackageReference Include="Azure.Data.AppConfiguration" Version="1.3.0" />
+    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.3.0" />
+    <PackageReference Include="Azure.Identity" Version="1.10.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
   </ItemGroup>
 

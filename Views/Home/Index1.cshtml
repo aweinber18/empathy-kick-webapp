@@ -1,19 +1,25 @@
 ﻿@using System.Collections
-@{
-    ViewData["Title"] = "Home Page";
-    List<Organization> organizations = new List<Organization>(9);
-    Organization[] arr = new Organization[9];
-    @if (Model != null)
-    {    
-        foreach (var organization in Model)
+@using EmpathyKick.Controllers
+
+@functions {
+    private void addData(Organization[] arr)
     {
-        organizations.Add(organization);
-    }
-        arr = organizations.ToArray();// Your existing code to iterate over Model
-        
+        for (int i = 0; i < arr.Length; i++)
+        {
+           // arr[i] = HomeController.organizationsList[i];
+        }
     }
 
-
+}
+@{
+    //ViewData["Title"] = "Home Page";
+    // List<Organization> organizations = new List<Organization>(9);
+    // foreach (var organization in Model)
+    // {
+    //     organizations.Add(organization);
+    // }
+      Organization[] arr = new Organization[9];
+    // addData(arr);
 }
 
 <div class="container mt-5">
@@ -28,12 +34,12 @@
                         {
                             <div class="card">
                                 <div class="card-body">
-                                    <img src="~/LogoFiles/@arr[i + j].LogoFile" class="img-fluid" alt="Organization Logo">
                                     <h5 class="card-title">@arr[i + j].OrganizationName</h5>
                                     <p class="card-text">ID: @arr[i + j].OrganizationId</p>
+                                    <img src="~/LogoFiles/@arr[i + j].LogoFile" class="img-fluid" alt="Organization Logo">
                                 </div>
                             </div>
-                        }
+                        }<!--C:/Users/shlom/source/repos/empathy-kick-webapp-->
                     </div>
                 </div>
             }
@@ -41,26 +47,6 @@
         </div>
 
         <style>
-            .carousel-item {
-                height: 100%;
-            }
-            .carousel {
-                width: 100%;
-                height: 500px;
-            }
-            .card {
-                height: 100%;
-                border-radius: 10px;
-                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-                transition: all 0.3s ease;
-                flex: 1 0 100%;
-            }
-
-            .card:hover {
-                transform: scale(1.05);
-                box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-            }
-
             .carousel-control-prev-icon,
             .carousel-control-next-icon {
                 background-color: black;
@@ -81,4 +67,5 @@
         </a>
     </div>
 </div>
+
 
