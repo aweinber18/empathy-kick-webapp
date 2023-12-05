@@ -33,7 +33,7 @@ namespace EmpathyKick.Controllers
             return View("EATableSelectionView");
         }
 
-        public IActionResult ColumnNamesView()
+        public IActionResult EAColumnSelectionView()
         {
             return View("EAColumnSelectionView");
         }

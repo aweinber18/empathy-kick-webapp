@@ -18,7 +18,8 @@
     }
 }
     <h1>@ViewData["Title"]</h1>
-    <form method="post" action="ColumnNamesView">
+
+<form method="post" action="EAColumnSelectionView">
         <h2>Select up to three tables to view:</h2>
 
         @for (int i = 0; i < tableNames.Count(); i++)
@@ -30,6 +31,6 @@
         }
 
         <br />
-        <button type="submit">Submit</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </form>
 
