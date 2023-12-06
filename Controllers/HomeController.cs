@@ -104,8 +104,7 @@ namespace EmpathyKick.Controllers
                 {
                     string textareaValue = Request.Form[key];
 
-                    // Process the checkbox data as needed
-                    string textareaName = key.Substring("Textarea".Length); // Extract the number from the key
+                    string textareaName = key.Substring("Textarea".Length); 
 
                     whereClauses.Add(textareaName);
                 }

@@ -40,7 +40,7 @@ namespace EmpathyKick.Models
         }
         public IList<string> GetTableNames()
         {
-            FormattableString sql = FormattableStringFactory.Create($"SELECT table_name FROM information_schema.tables WHERE TABLE_NAME NOT LIKE 'spt%' AND TABLE_NAME NOT LIKE 'MSreplication%';");
+            FormattableString sql = FormattableStringFactory.Create($"SELECT table_name FROM information_schema.tables WHERE TABLE_NAME NOT LIKE 'spt%' AND TABLE_NAME NOT LIKE 'MSreplication%' AND TABLE_NAME NOT LIKE 'data%';");
 
             var tablenames = this.Database.SqlQuery<string>(sql).ToList();
             return tablenames;
