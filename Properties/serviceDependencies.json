@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "secrets1": {
+      "type": "secrets",
+      "connectionId": "EmpathyDBConnection"
+    },
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "connectionToAzureEmpathyDB",
+      "dynamicId": null
+    }
+  }
+}

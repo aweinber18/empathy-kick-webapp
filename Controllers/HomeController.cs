@@ -1,26 +1,45 @@
 ﻿using EmpathyKick.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace EmpathyKick.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly MyDBContext _context;
+        //public static Organization[] organizationsList;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(MyDBContext context, ILogger<HomeController> logger)
         {
+            _context = context;
             _logger = logger;
         }
-
+        [HttpGet]
         public IActionResult Index()
         {
-            return View();
-        }
+            if (_context.Database.GetDbConnection().State != System.Data.ConnectionState.Open)
+            {
+                _context.Database.GetDbConnection().Open();
+            }
+ 
+            FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;"); 
+            var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
+            
 
-        public IActionResult Privacy()
+            return View(topOrganizations);
+
+
+            //return View();
+
+        }
+        [HttpPost]
+        public IActionResult Privacy(Organization org)
         {
-            return View();
+            
+            return View(org);
         }
 
         public IActionResult Register()
