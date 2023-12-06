@@ -54,7 +54,7 @@ namespace EmpathyKick.Controllers
 
         public IActionResult EAColumnSelectionView()
         {
-            List<string> tableNames = new List<string>();
+            List<TableColumnPair> tableColumnPairs = new List<TableColumnPair>();
             // Get all keys in the form collection
             var formKeys = Request.Form.Keys;
 
@@ -69,15 +69,15 @@ namespace EmpathyKick.Controllers
 
                     // Process the checkbox data as needed
                     bool isChecked = checkboxValue == "on";
-                    string checkboxName = key.Substring("Checkbox".Length); // Extract the number from the key
-
+                    string tableName = key.Substring("Checkbox".Length); // Extract the number from the key
                     // Now you can use isChecked and checkboxNumber as needed
                     // For example, you might want to store this information or perform some other action
-                    tableNames.Add(checkboxName);
+
+                    //tableColumnPairs.Add(new TableColumnPair(tableName, columnName));
                 }
             }
 
-            return View("EAColumnSelectionView", tableNames);
+            return View("EAColumnSelectionView", tableColumnPairs);
         }
 
         public IActionResult EADataView()

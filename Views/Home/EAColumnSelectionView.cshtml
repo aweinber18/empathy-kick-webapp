@@ -5,27 +5,27 @@
     var dbContext = new EmpathyKick.Data.LocalDbContext(); // Replace YourDbContext with your actual DbContext class
     var tableNames = Model;
     // Retrieve all table names from the database
-    var columnNames = dbContext.GetColumnNames(tableNames);
+    List<TableColumnPair> pairs = dbContext.GetColumnNames(tableNames);
 }
     <form method="post" action="EADataView">
         <table bgcolor="darkgrey" border="1">
             <tr>
                 <th bgcolor="lightgrey">Table: </th>
-                @foreach (var columnName in columnNames)
+                @foreach (var pair in pairs)
                 {
-                    <th bgcolor="lightgrey">Address &nbsp;</th>
+                    <th bgcolor="lightgrey">@pair.TableName &nbsp;</th>
                 }
             </tr>
             <tr>
             <th bgcolor="lightgrey">Column: </th>
-                @foreach (var columnName in columnNames)
+            @foreach (var pair in pairs)
                 {
-                <th bgcolor="lightgrey">@columnName &nbsp;<input type="checkbox" id="@columnName" name="selectedColumns" value=""></th>
+                <th bgcolor="lightgrey">@pair.ColumnName &nbsp;<input type="checkbox" id="@pair.ColumnName" name="Checkbox@(pair.TableName + "," + pair.ColumnName)" value=""></th>
                 }
             </tr>
             <tr>
                     <td bgcolor="lightgrey"> Where:</td>
-                @foreach (var columnName in columnNames)
+            @foreach (var pair in pairs)
                 {
                     <td>
                     <textarea> </textarea>

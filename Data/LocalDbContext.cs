@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EmpathyKick.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -19,7 +21,7 @@ namespace EmpathyKick.Data
                 "Card", "CardRegistration", "Tag", "TagRegistration", "Donation", "Invoice", "Product"};
         }
 
-        public IList<string> GetColumnNames(IList<string> tables) {
+        public IList<TableColumnPair> GetColumnNames(IList<string> tables) {
             var tableStringBuilder = new StringBuilder();
             for (int i = 0; i < tables.Count; i++)
             {
@@ -37,7 +39,7 @@ namespace EmpathyKick.Data
                                                         tablesString + 
                                                         ";");
             /*var tables = _context.Tables.FromSqlRaw(sql.Format, sql.GetArguments()).ToList();*/
-            return new List<string> { "AddressID", "Address", "City", "Region", "Country", "ZIP" };
+            return new List<TableColumnPair> { new TableColumnPair("Address", "AddressID"), new TableColumnPair("Address", "Address"), new TableColumnPair("Address", "City"), new TableColumnPair("Address", "Region"), new TableColumnPair("Address", "Country"), new TableColumnPair("Address", "ZIP") };
         }
     }
 }

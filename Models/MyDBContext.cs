@@ -64,4 +64,15 @@ namespace EmpathyKick.Models
         public string Region { get; set; }
         public string Country { get; set; }
     }
+
+    public class TableColumnPair
+    {
+        public TableColumnPair(string table, string column) 
+        {
+            TableName = table;
+            ColumnName = column;
+        }
+        public string TableName { get; set; }
+        public string ColumnName { get; set; }
+    }
 }
