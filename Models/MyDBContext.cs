@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmpathyKick.Models
@@ -14,9 +16,17 @@ namespace EmpathyKick.Models
         public DbSet<Addresses> Addresses { get; set; }
         public DbSet<Donations> Donations { get; set; }
 
+        public IList<string> GetTableNames()
+        {
+            FormattableString sql = FormattableStringFactory.Create($"SELECT table_name FROM information_schema.tables WHERE TABLE_NAME NOT LIKE 'spt%' AND TABLE_NAME NOT LIKE 'MSreplication%';");
+
+            var tablenames = this.Database.SqlQuery<string>(sql).ToList();
+            return tablenames;
+        }
 
 
     }
+    
 
     public class Donations
     {
@@ -63,5 +73,32 @@ namespace EmpathyKick.Models
         public string City { get; set; }
         public string Region { get; set; }
         public string Country { get; set; }
+
+        public List<string> GetSpecifiedData(List<string> specifiedColumns)
+        {
+            List<string> returnedData = new List<string>();
+            for (int i = 0; i < specifiedColumns.Count; i++)
+            {
+                switch (specifiedColumns[i])
+                {
+                    case "AddressId":
+                        returnedData.Add(AddressId.ToString());
+                        break;
+                    case "Address":
+                        returnedData.Add(Address);
+                        break;
+                    case "City":
+                        returnedData.Add(City);
+                        break;
+                    case "Region":
+                        returnedData.Add(Region);
+                        break;
+                    case "Country":
+                        returnedData.Add(Country);
+                        break;
+                }
+            }
+            return returnedData;
+        }
     }
 }

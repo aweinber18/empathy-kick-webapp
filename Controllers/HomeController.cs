@@ -49,7 +49,10 @@ namespace EmpathyKick.Controllers
 
         public IActionResult EATableSelectionView()
         {
-            return View("EATableSelectionView");
+           // FormattableString sql = FormattableStringFactory.Create($"SELECT table_name FROM information_schema.tables WHERE TABLE_NAME NOT LIKE 'spt%' AND TABLE_NAME NOT LIKE 'MSreplication%';");
+           
+           // var tablenames = _context.FromSql(sql.Format, parameters: sql.GetArguments()).;
+            return View("EATableSelectionView",_context);
         }
 
         public IActionResult EAColumnSelectionView()
