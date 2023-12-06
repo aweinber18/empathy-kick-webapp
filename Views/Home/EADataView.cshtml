@@ -1,0 +1,39 @@
+﻿@{
+    var colNames = new List<string> { "AddressID", "Address", "City", "Region", "Country", "ZIP" };
+    var rows = new List<List<string>> { 
+                                       new List<string> {"1", "75-31 150TH St.", "Flushing", "NY", "United States", "11367"},
+                                       new List<string> {"2", "5 Reddick Ct.", "Toronto", "ON", "Canada", "M6B 2S1"}       
+                                     };
+}
+<table bgcolor="darkgrey" border="1">
+    <tr>
+        @foreach (var colName in colNames)
+        {
+            <th>@colName &nbsp; &nbsp;</th>
+        }
+     
+    </tr>
+    @foreach (var row in rows)
+    {
+        <tr>
+            @foreach (var item in row)
+            {
+                <td bgcolor="lightgrey">@item</td>
+            }
+        </tr>
+    }
+</table>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    td {
+        width: auto; /* Set the width to auto to fit the content */
+    }
+</style>

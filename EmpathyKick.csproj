@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+
     <None Include="wwwroot\LogoFiles\18ForIsrael%28Custom%29.png" />
     <None Include="wwwroot\LogoFiles\AliyaInstitute%28Custom%29.jpeg" />
     <None Include="wwwroot\LogoFiles\BBQ4IDF%28Custom%29.jpeg" />
@@ -31,6 +32,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Admin\" />
   </ItemGroup>
 
 </Project>
