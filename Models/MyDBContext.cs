@@ -1,20 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace EmpathyKick
+namespace EmpathyKick.Models
 {
     public class MyDBContext : DbContext
     {
+
         public MyDBContext(DbContextOptions<MyDBContext> options) : base(options)
         {
         }
 
-        public DbSet<Organization> Organizations { get; set; } 
+        public DbSet<Organization> Organizations { get; set; }
         public DbSet<Addresses> Addresses { get; set; }
         public DbSet<Donations> Donations { get; set; }
-        
-        
-        
+
+
+
     }
 
     public class Donations
