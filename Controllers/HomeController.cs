@@ -27,8 +27,8 @@ namespace EmpathyKick.Controllers
  
             FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;"); 
             var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
-            
 
+            _context.Database.GetDbConnection().Close();
             return View(topOrganizations);
 
 
@@ -49,9 +49,7 @@ namespace EmpathyKick.Controllers
 
         public IActionResult EATableSelectionView()
         {
-           // FormattableString sql = FormattableStringFactory.Create($"SELECT table_name FROM information_schema.tables WHERE TABLE_NAME NOT LIKE 'spt%' AND TABLE_NAME NOT LIKE 'MSreplication%';");
-           
-           // var tablenames = _context.FromSql(sql.Format, parameters: sql.GetArguments()).;
+          //pass in the context to the view so that we can access the database
             return View("EATableSelectionView",_context);
         }
 

@@ -1,11 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Empathy Admin";
 
-    // Assuming you have a DbContext for your database
+    //  DbContext for the database
     var dbContext = Model;
     // Retrieve all table names from the database
-    //var tableNames = dbContext.GetTableNames();
-
     var tableNames = dbContext.GetTableNames();
     
 }
