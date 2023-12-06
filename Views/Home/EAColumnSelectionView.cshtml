@@ -1,12 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Empathy Admin";
 
-    // Assuming you have a DbContext for your database
-    //var dbContext = new EmpathyKick.Data.LocalDbContext(); // Replace YourDbContext with your actual DbContext class
-    var tableNames = Model;
-    // Retrieve all table names from the database
-   // var columnNames = dbContext.GetColumnNames(tableNames);
-    var columnNames = tableNames;
+    var columnNames = Model;
+   
 }
     <form method="post" action="EADataView">
         <table bgcolor="darkgrey" border="1">

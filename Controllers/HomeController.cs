@@ -77,12 +77,40 @@ namespace EmpathyKick.Controllers
                     tableNames.Add(checkboxName);
                 }
             }
-
-            return View("EAColumnSelectionView", tableNames);
+            var columnNames = _context.GetColumnNames(tableNames);
+            return View("EAColumnSelectionView",columnNames);
         }
 
         public IActionResult EADataView()
         {
+            var formKeys = Request.Form.Keys;
+            List<string> columnNames = new List<string>();
+            List<string> whereClauses = new List<string>();
+              foreach (var key in formKeys)
+            {
+                if (key.StartsWith("Checkbox"))
+                {
+                    // Get the value of the checkbox (will be "on" if checked)
+                    string checkboxValue = Request.Form[key];
+
+                    // Process the checkbox data as needed
+                    bool isChecked = checkboxValue == "on";
+                    string checkboxName = key.Substring("Checkbox".Length); // Extract the number from the key
+
+                    // Now you can use isChecked and checkboxNumber as needed
+                    // For example, you might want to store this information or perform some other action
+                    columnNames.Add(checkboxName);
+                } else if (key.StartsWith("Textarea"))
+                {
+                    string textareaValue = Request.Form[key];
+
+                    // Process the checkbox data as needed
+                    string textareaName = key.Substring("Textarea".Length); // Extract the number from the key
+
+                    whereClauses.Add(textareaName);
+                }
+            }
+            
             return View("EADataView");
         }
 
