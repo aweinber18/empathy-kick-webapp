@@ -1,11 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace EmpathyKick.Data
-{
-    public class LocalDbContext : DbContext
-    {
+
         //Database database = new Database();
         public IList<string> GetTableNames() {
             FormattableString sql = FormattableStringFactory.Create($"SELECT table_name " +
