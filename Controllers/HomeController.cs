@@ -42,6 +42,11 @@ namespace EmpathyKick.Controllers
         {
             return View();
         }
+        public IActionResult ProfilePage()
+        {
+
+            return View();
+        }
 
         public IActionResult Register()
         {
