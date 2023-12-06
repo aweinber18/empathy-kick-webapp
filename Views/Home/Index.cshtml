@@ -26,13 +26,17 @@
                     <div class="card-deck">
                         @for (int j = 0; j < 3 && i + j < arr.Length; j++)
                         {
+                            
                             <div class="card">
+                                <a asp-action="ProfilePage" asp-route-organizationName="@arr[i + j].OrganizationName">
                                 <div class="card-body">
                                     <img src="~/LogoFiles/@arr[i + j].LogoFile" class="img-fluid" alt="Organization Logo">
                                     <h5 class="card-title">@arr[i + j].OrganizationName</h5>
                                     <p class="card-text">ID: @arr[i + j].OrganizationId</p>
                                 </div>
+                                </a>
                             </div>
+                            
                         }
                     </div>
                 </div>
