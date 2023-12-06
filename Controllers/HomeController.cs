@@ -35,11 +35,11 @@ namespace EmpathyKick.Controllers
             //return View();
 
         }
-        [HttpPost]
-        public IActionResult Privacy(Organization org)
+       
+        public IActionResult Privacy()
         {
             
-            return View(org);
+            return View("Privacy");
         }
 
         public IActionResult Register()
