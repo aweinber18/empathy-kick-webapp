@@ -11,14 +11,14 @@ namespace EmpathyKick.Models
         }
 
         public DbSet<Organization> Organizations { get; set; }
-        public DbSet<Addresses> Addresses { get; set; }
-        public DbSet<Donations> Donations { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Donation> Donations { get; set; }
 
 
 
     }
 
-    public class Donations
+    public class Donation
     {
         [Key]
         public int ReceiptNumber { get; set; }
@@ -55,11 +55,11 @@ namespace EmpathyKick.Models
         public string? ThemeColor { get; set; }
     }
 
-    public class Addresses
+    public class Address
     {
         [Key]
         public int AddressId { get; set; }
-        public string Address { get; set; }
+        public string StreetAddress { get; set; }
         public string City { get; set; }
         public string Region { get; set; }
         public string Country { get; set; }
