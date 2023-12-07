@@ -2,24 +2,33 @@
     ViewData["Title"] = "Empathy Admin";
 
     var columnNames = Model;
-   
+
 }
     <form method="post" action="EADataView">
         <table bgcolor="darkgrey" border="1">
             <tr>
-            <th bgcolor="lightgrey">&nbsp;</th>
+                <th bgcolor="lightgrey">&nbsp;</th>
                 @foreach (var columnName in columnNames)
                 {
-                <th bgcolor="lightgrey">@columnName &nbsp;<input type="checkbox" id="@columnName" name="selectedColumns" value=""></th>
+                    <th bgcolor="lightgrey">@columnName &nbsp;<input type="checkbox" id="@columnName" name="selectedColumns" value=""></th>
                 }
             </tr>
             <tr>
-                    <td bgcolor="lightgrey"> Where:</td>
+                <td bgcolor="lightgrey"> Where:</td>
                 @foreach (var columnName in columnNames)
                 {
                     <td>
-                    <textarea> </textarea>
+                        <textarea> </textarea>
                     </td>
+                }
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th bgcolor="lightgrey">Table: </th>
+                @foreach (var columnName in columnNames)
+                {
+                    <th bgcolor="lightgrey">Address &nbsp;</th>
                 }
             </tr>
         </table>

@@ -17,7 +17,7 @@ namespace EmpathyKick.Models
         public DbSet<Addresses> Addresses { get; set; }
         public DbSet<Donations> Donations { get; set; }
 
-        public IList<string> GetColumnNames(IList<string> tables)
+        public List<string> GetColumnNames(List<string> tables)
         {
             var tableStringBuilder = new StringBuilder();
             for (int i = 0; i < tables.Count; i++)

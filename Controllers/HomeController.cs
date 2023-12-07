@@ -77,8 +77,15 @@ namespace EmpathyKick.Controllers
                     tableNames.Add(checkboxName);
                 }
             }
-            var columnNames = _context.GetColumnNames(tableNames);
-            return View("EAColumnSelectionView",columnNames);
+            //var adressColumns =
+            //var columnNames = _context.GetColumnNames(tableNames);
+            List<List<string>> tableColumnNames = new List<List<string>>();
+            foreach (var tableName in tableNames)
+            {
+				List<string> tName = new List<string> {tableName};
+				tableColumnNames.Add(_context.GetColumnNames(tName));
+			}
+            return View("EAColumnSelectionView");
         }
 
         public IActionResult EADataView()
