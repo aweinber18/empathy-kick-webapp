@@ -45,8 +45,9 @@ namespace EmpathyKick.Controllers
         public IActionResult ProfilePage(string organizationName)
         {
             ViewData["OrganizationName"] = organizationName;
+			
 
-            return View();
+			return View();
         }
 
         public IActionResult Register()
