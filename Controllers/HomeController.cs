@@ -78,14 +78,14 @@ namespace EmpathyKick.Controllers
                 }
             }
             //var adressColumns =
-            //var columnNames = _context.GetColumnNames(tableNames);
+            var columnNames = _context.GetColumnNames(tableNames);
             List<List<string>> tableColumnNames = new List<List<string>>();
             foreach (var tableName in tableNames)
             {
 				List<string> tName = new List<string> {tableName};
 				tableColumnNames.Add(_context.GetColumnNames(tName));
 			}
-            return View("EAColumnSelectionView");
+            return View("EAColumnSelectionView",columnNames);
         }
 
         public IActionResult EADataView()
