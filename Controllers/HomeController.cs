@@ -55,17 +55,18 @@ namespace EmpathyKick.Controllers
 			FormattableString regionSQL = FormattableStringFactory.Create($"SELECT Region FROM Address WHERE AddressID = '{number}' ;");
 			FormattableString citySQL = FormattableStringFactory.Create($"SELECT City FROM Address WHERE AddressID = '{number}' ;");
 			FormattableString countrySQL = FormattableStringFactory.Create($"SELECT Country FROM Address WHERE AddressID = '{number}' ;");
-			
+            FormattableString amountDonatedSQL = FormattableStringFactory.Create($" Select SUM(Amount) AS TotalDonations FROM Donation where OrganizationID = '{myOrg.OrganizationId}' GROUP BY OrganizationID");
             
             var address = _context.Database.SqlQuery<string>(addressSQL).ToList();
 			var region = _context.Database.SqlQuery<string>(regionSQL).ToList();
 			var city = _context.Database.SqlQuery<string>(citySQL).ToList();
 			var country = _context.Database.SqlQuery<string>(countrySQL).ToList();
+            var amount = _context.Database.SqlQuery<Decimal>(amountDonatedSQL).ToList();
 			ViewData["address"] = address[0];
 			ViewData["region"] = region[0];
 			ViewData["city"] = city[0];
 			ViewData["country"] = country[0];
-
+            ViewData["amountDonated"] = amount[0];
 
 			return View(myOrg);
         }
