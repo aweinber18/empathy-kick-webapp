@@ -2,9 +2,17 @@
 	ViewData["Title"] = ViewData["OrganizationName"];
 	Organization myOrg = Model;
 }
+
+
 <h1>@ViewData["Title"]</h1>
-<p>@myOrg.OrganizationId</p>
-<p>Address: @ViewData["address"], @ViewData["city"],  @ViewData["region"], @ViewData["country"] </p>
+
+
+
+
+
+<img src="~/LogoFiles/@myOrg.LogoFile" class="img-fluid" alt="Organization Logo">
+
+<h2>Address: @ViewData["address"], @ViewData["city"],  @ViewData["region"], @ViewData["country"] </h2>
 
 
 
