@@ -27,19 +27,19 @@ namespace EmpathyKick.Controllers
  
             FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;"); 
             var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
-            
 
+            _context.Database.GetDbConnection().Close();
             return View(topOrganizations);
 
 
             //return View();
 
         }
-        [HttpPost]
-        public IActionResult Privacy(Organization org)
+       
+        public IActionResult Privacy()
         {
             
-            return View(org);
+            return View("Privacy");
         }
 
         public IActionResult Register()
@@ -49,7 +49,8 @@ namespace EmpathyKick.Controllers
 
         public IActionResult EATableSelectionView()
         {
-            return View("EATableSelectionView");
+          //pass in the context to the view so that we can access the database
+            return View("EATableSelectionView",_context);
         }
 
         public IActionResult EAColumnSelectionView()
@@ -76,12 +77,46 @@ namespace EmpathyKick.Controllers
                     //tableColumnPairs.Add(new TableColumnPair(tableName, columnName));
                 }
             }
-
-            return View("EAColumnSelectionView", tableColumnPairs);
+            //var adressColumns =
+            //var columnNames = _context.GetColumnNames(tableNames);
+            List<List<string>> tableColumnNames = new List<List<string>>();
+            foreach (var tableName in tableNames)
+            {
+				List<string> tName = new List<string> {tableName};
+				tableColumnNames.Add(_context.GetColumnNames(tName));
+			}
+            return View("EAColumnSelectionView");
         }
 
         public IActionResult EADataView()
         {
+            var formKeys = Request.Form.Keys;
+            List<string> columnNames = new List<string>();
+            List<string> whereClauses = new List<string>();
+              foreach (var key in formKeys)
+            {
+                if (key.StartsWith("Checkbox"))
+                {
+                    // Get the value of the checkbox (will be "on" if checked)
+                    string checkboxValue = Request.Form[key];
+
+                    // Process the checkbox data as needed
+                    bool isChecked = checkboxValue == "on";
+                    string checkboxName = key.Substring("Checkbox".Length); // Extract the number from the key
+
+                    // Now you can use isChecked and checkboxNumber as needed
+                    // For example, you might want to store this information or perform some other action
+                    columnNames.Add(checkboxName);
+                } else if (key.StartsWith("Textarea"))
+                {
+                    string textareaValue = Request.Form[key];
+
+                    string textareaName = key.Substring("Textarea".Length); 
+
+                    whereClauses.Add(textareaName);
+                }
+            }
+            
             return View("EADataView");
         }
 

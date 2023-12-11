@@ -28,8 +28,17 @@
             @foreach (var pair in pairs)
                 {
                     <td>
-                    <textarea> </textarea>
+                        <textarea> </textarea>
                     </td>
+                }
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th bgcolor="lightgrey">Table: </th>
+                @foreach (var columnName in columnNames)
+                {
+                    <th bgcolor="lightgrey">Address &nbsp;</th>
                 }
             </tr>
         </table>

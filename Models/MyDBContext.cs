@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmpathyKick.Models
@@ -14,9 +17,38 @@ namespace EmpathyKick.Models
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Donation> Donations { get; set; }
 
+        public List<string> GetColumnNames(List<string> tables)
+        {
+            var tableStringBuilder = new StringBuilder();
+            for (int i = 0; i < tables.Count; i++)
+            {
+                tableStringBuilder.Append("'");
+                tableStringBuilder.Append(tables[i]);
+                tableStringBuilder.Append("'");
+
+                if (i < tables.Count - 1)
+                    tableStringBuilder.Append(", ");
+            }
+            string tablesString = "(" + tableStringBuilder.ToString() + ")";
+            FormattableString sql = FormattableStringFactory.Create($"SELECT COLUMN_NAME " +
+                                                                    $"FROM information_schema.COLUMNS " +
+                                                                    $"WHERE TABLE_NAME IN " +
+                                                                    tablesString +
+                                                                    ";");
+            var columns = this.Database.SqlQuery<string>(sql).ToList();
+            return columns;
+        }
+        public IList<string> GetTableNames()
+        {
+            FormattableString sql = FormattableStringFactory.Create($"SELECT table_name FROM information_schema.tables WHERE TABLE_NAME NOT LIKE 'spt%' AND TABLE_NAME NOT LIKE 'MSreplication%' AND TABLE_NAME NOT LIKE 'data%';");
+
+            var tablenames = this.Database.SqlQuery<string>(sql).ToList();
+            return tablenames;
+        }
 
 
     }
+    
 
     public class Donation
     {
@@ -63,6 +95,33 @@ namespace EmpathyKick.Models
         public string City { get; set; }
         public string Region { get; set; }
         public string Country { get; set; }
+
+        public List<string> GetSpecifiedData(List<string> specifiedColumns)
+        {
+            List<string> returnedData = new List<string>();
+            for (int i = 0; i < specifiedColumns.Count; i++)
+            {
+                switch (specifiedColumns[i])
+                {
+                    case "AddressId":
+                        returnedData.Add(AddressId.ToString());
+                        break;
+                    case "Address":
+                        returnedData.Add(Address);
+                        break;
+                    case "City":
+                        returnedData.Add(City);
+                        break;
+                    case "Region":
+                        returnedData.Add(Region);
+                        break;
+                    case "Country":
+                        returnedData.Add(Country);
+                        break;
+                }
+            }
+            return returnedData;
+        }
     }
 
     public class TableColumnPair
