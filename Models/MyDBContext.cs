@@ -17,7 +17,7 @@ namespace EmpathyKick.Models
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Donation> Donations { get; set; }
 
-        public List<string> GetColumnNames(List<string> tables)
+        public List<TableColumnPair> GetTableAndColumnNames(List<string> tables)
         {
             var tableStringBuilder = new StringBuilder();
             for (int i = 0; i < tables.Count; i++)
@@ -30,13 +30,22 @@ namespace EmpathyKick.Models
                     tableStringBuilder.Append(", ");
             }
             string tablesString = "(" + tableStringBuilder.ToString() + ")";
-            FormattableString sql = FormattableStringFactory.Create($"SELECT COLUMN_NAME " +
+            FormattableString sql = FormattableStringFactory.Create($"SELECT TABLE_NAME, COLUMN_NAME " +
                                                                     $"FROM information_schema.COLUMNS " +
                                                                     $"WHERE TABLE_NAME IN " +
                                                                     tablesString +
                                                                     ";");
-            var columns = this.Database.SqlQuery<string>(sql).ToList();
-            return columns;
+            var pairs = new List<TableColumnPair>
+            {
+                new TableColumnPair("Address", "AddressID"),
+                new TableColumnPair("Address", "StreetAddress"),
+                new TableColumnPair("Address", "City"),
+                new TableColumnPair("Address", "Region"),
+                new TableColumnPair("Address", "Country"),
+                new TableColumnPair("Address", "ZIP")
+            };
+                //this.Database.SqlQuery<string>(sql).ToList();
+            return pairs;
         }
         public IList<string> GetTableNames()
         {
@@ -107,7 +116,7 @@ namespace EmpathyKick.Models
                         returnedData.Add(AddressId.ToString());
                         break;
                     case "Address":
-                        returnedData.Add(Address);
+                        returnedData.Add(StreetAddress);
                         break;
                     case "City":
                         returnedData.Add(City);

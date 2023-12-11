@@ -21,7 +21,7 @@ namespace EmpathyKick.Data
                 "Card", "CardRegistration", "Tag", "TagRegistration", "Donation", "Invoice", "Product"};
         }
 
-        public IList<TableColumnPair> GetColumnNames(IList<string> tables) {
+        public IList<TableColumnPair> GetTableAndColumnNames(IList<string> tables) {
             var tableStringBuilder = new StringBuilder();
             for (int i = 0; i < tables.Count; i++)
             {

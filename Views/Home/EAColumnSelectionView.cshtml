@@ -3,42 +3,37 @@
 
     // Assuming you have a DbContext for your database
     var dbContext = new EmpathyKick.Data.LocalDbContext(); // Replace YourDbContext with your actual DbContext class
-    var tableNames = Model;
-    // Retrieve all table names from the database
-    List<TableColumnPair> pairs = dbContext.GetColumnNames(tableNames);
+    var tableColumnPairs = Model;
 }
     <form method="post" action="EADataView">
         <table bgcolor="darkgrey" border="1">
+            @* Table names *@
             <tr>
                 <th bgcolor="lightgrey">Table: </th>
-                @foreach (var pair in pairs)
+            @foreach (var pair in tableColumnPairs)
                 {
                     <th bgcolor="lightgrey">@pair.TableName &nbsp;</th>
                 }
             </tr>
+            @* Column names *@
             <tr>
             <th bgcolor="lightgrey">Column: </th>
-            @foreach (var pair in pairs)
+            @foreach (var pair in tableColumnPairs)
                 {
-                <th bgcolor="lightgrey">@pair.ColumnName &nbsp;<input type="checkbox" id="@pair.ColumnName" name="Checkbox@(pair.TableName + "," + pair.ColumnName)" value=""></th>
+                <th bgcolor="lightgrey">
+                    <input type="checkbox" id="@pair.ColumnName" name="Checkbox@(pair.TableName + "," + pair.ColumnName)" value="">
+                    @pair.ColumnName &nbsp;
+                </th>
                 }
             </tr>
+            @* Where clauses *@
             <tr>
                     <td bgcolor="lightgrey"> Where:</td>
-            @foreach (var pair in pairs)
+            @foreach (var pair in tableColumnPairs)
                 {
                     <td>
-                        <textarea> </textarea>
+                        <textarea name="Textarea"> </textarea>
                     </td>
-                }
-            </tr>
-        </table>
-        <table>
-            <tr>
-                <th bgcolor="lightgrey">Table: </th>
-                @foreach (var columnName in columnNames)
-                {
-                    <th bgcolor="lightgrey">Address &nbsp;</th>
                 }
             </tr>
         </table>

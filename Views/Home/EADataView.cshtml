@@ -1,11 +1,19 @@
 ﻿@{
-    var colNames = new List<string> { "AddressID", "Address", "City", "Region", "Country", "ZIP" };
+    Dictionary<string, List<string>> data = Model;
+    var tableNames = new List<string> { "Address", "Address", "Address", "Address", "Address", "Address" };
+    var colNames = new List<string> { "AddressID", "StreetAddress", "City", "Region", "Country", "ZIP" };
     var rows = new List<List<string>> { 
                                        new List<string> {"1", "75-31 150TH St.", "Flushing", "NY", "United States", "11367"},
                                        new List<string> {"2", "5 Reddick Ct.", "Toronto", "ON", "Canada", "M6B 2S1"}       
                                      };
 }
 <table bgcolor="darkgrey" border="1">
+    <tr>
+        @foreach (var tableName in tableNames) 
+        {
+            <th>@tableName &nbsp; &nbsp;</th>
+        }
+    </tr>
     <tr>
         @foreach (var colName in colNames)
         {

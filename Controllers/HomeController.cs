@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
+using EmpathyKick.Data;
 
 namespace EmpathyKick.Controllers
 {
@@ -55,10 +56,9 @@ namespace EmpathyKick.Controllers
 
         public IActionResult EAColumnSelectionView()
         {
-            List<TableColumnPair> tableColumnPairs = new List<TableColumnPair>();
+            var selectedTables = new List<string>();
             // Get all keys in the form collection
             var formKeys = Request.Form.Keys;
-
             // Iterate over the keys to find the dynamically named checkboxes
             foreach (var key in formKeys)
             {
@@ -73,19 +73,13 @@ namespace EmpathyKick.Controllers
                     string tableName = key.Substring("Checkbox".Length); // Extract the number from the key
                     // Now you can use isChecked and checkboxNumber as needed
                     // For example, you might want to store this information or perform some other action
-
-                    //tableColumnPairs.Add(new TableColumnPair(tableName, columnName));
+                    selectedTables.Add(tableName);
                 }
             }
-            //var adressColumns =
-            //var columnNames = _context.GetColumnNames(tableNames);
-            List<List<string>> tableColumnNames = new List<List<string>>();
-            foreach (var tableName in tableNames)
-            {
-				List<string> tName = new List<string> {tableName};
-				tableColumnNames.Add(_context.GetColumnNames(tName));
-			}
-            return View("EAColumnSelectionView");
+
+            List<TableColumnPair> tableColumnPairs = _context.GetTableAndColumnNames(selectedTables);
+            
+            return View("EAColumnSelectionView", tableColumnPairs);
         }
 
         public IActionResult EADataView()
@@ -93,7 +87,7 @@ namespace EmpathyKick.Controllers
             var formKeys = Request.Form.Keys;
             List<string> columnNames = new List<string>();
             List<string> whereClauses = new List<string>();
-              foreach (var key in formKeys)
+            foreach (var key in formKeys)
             {
                 if (key.StartsWith("Checkbox"))
                 {
@@ -107,17 +101,18 @@ namespace EmpathyKick.Controllers
                     // Now you can use isChecked and checkboxNumber as needed
                     // For example, you might want to store this information or perform some other action
                     columnNames.Add(checkboxName);
-                } else if (key.StartsWith("Textarea"))
+                } 
+                else if (key.StartsWith("Textarea"))
                 {
                     string textareaValue = Request.Form[key];
-
-                    string textareaName = key.Substring("Textarea".Length); 
-
-                    whereClauses.Add(textareaName);
+                    whereClauses.Add(textareaValue);
                 }
             }
+            var model = new Dictionary<string, List<string>>();
+            model.Add("col", columnNames);
+            model.Add("where", whereClauses);
             
-            return View("EADataView");
+            return View("EADataView", model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
