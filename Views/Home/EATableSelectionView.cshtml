@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Empathy Admin";
+
+    //  DbContext for the database
+    var dbContext = Model;
+    // Retrieve all table names from the database
+    var tableNames = dbContext.GetTableNames();
+    
+}
+@{
+    void ShowColumnNames()
+    {
+        
+    }
+    if (Context.Request.Method == "POST")
+    {
+        ShowColumnNames();
+    }
+}
+    <h1>@ViewData["Title"]</h1>
+
+<form method="post" action="EAColumnSelectionView">
+    <h2>Select up to three tables to view:</h2>
+
+        
+    @for (int i = 0; i < tableNames.Count; i++)
+    {
+        <div>
+            <input type="checkbox" id="table@(i)" name="Checkbox@(tableNames[i])" value="@tableNames[i]">
+            <label for="table@(i)">@tableNames[i]</label>
+        </div>
+    }
+    <br />
+
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+

@@ -16,10 +16,8 @@ namespace EmpathyKick.Controllers
         {
             _context = context;
             _logger = logger;
-            //hard code implementation for testing
-           // organizationsList = new []{new Organization(1, "18ForIsrael",5,0, "18ForIsrael(Custom).png","null"), new Organization(2, "Aliya Institute",6,0, "AliyaInstitute(Custom).jpeg","none"), new Organization(3, "BBQ4IDF",9,0, "BBQ4IDF(Custom).jpeg","none"), new Organization(6, "Healing Hands", 10, 0, "healingHandsJewishHearts.jpeg", "none"), new Organization(7, "Light Up Chicago", 11, 0, "LightUpChicago(Custom).jpeg", "none"), new Organization(8, "Ohr Hatorah", 12, 0, "OhrHatorahYeshiva(Custom).jpg", "none"), new Organization(9, "school", 13, 0, "school(Custom).png", "none"), new Organization(11, "Standing for Israel", 14, 0, "StandingForIsrael.jpeg", "none"), new Organization(12, "Tzevet Hatzolah", 15, 0, "TzevetHatzolah(Custom).jpeg", "none"), new Organization(13, "Zaka", 16, 0, "zaka(Custom).jpeg", "none") };
         }
-
+        [HttpGet]
         public IActionResult Index()
         {
             if (_context.Database.GetDbConnection().State != System.Data.ConnectionState.Open)
@@ -27,20 +25,21 @@ namespace EmpathyKick.Controllers
                 _context.Database.GetDbConnection().Open();
             }
  
-            FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;"); ;
+            FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;"); 
             var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
-            
 
+            _context.Database.GetDbConnection().Close();
             return View(topOrganizations);
 
 
             //return View();
 
         }
-
-        public IActionResult Privacy()
+        [HttpPost]
+        public IActionResult Privacy(Organization org)
         {
-            return View();
+            
+            return View(org);
         }
         public IActionResult ProfilePage(string organizationName)
         {
@@ -58,6 +57,45 @@ namespace EmpathyKick.Controllers
         public IActionResult Register()
         {
             return View("Register");
+        }
+
+        public IActionResult EATableSelectionView()
+        {
+          //pass in the context to the view so that we can access the database
+            return View("EATableSelectionView",_context);
+        }
+
+        public IActionResult EAColumnSelectionView()
+        {
+            List<string> tableNames = new List<string>();
+            // Get all keys in the form collection
+            var formKeys = Request.Form.Keys;
+
+            // Iterate over the keys to find the dynamically named checkboxes
+            foreach (var key in formKeys)
+            {
+                // Check if the key represents a dynamically named checkbox
+                if (key.StartsWith("Checkbox"))
+                {
+                    // Get the value of the checkbox (will be "on" if checked)
+                    string checkboxValue = Request.Form[key];
+
+                    // Process the checkbox data as needed
+                    bool isChecked = checkboxValue == "on";
+                    string checkboxName = key.Substring("Checkbox".Length); // Extract the number from the key
+
+                    // Now you can use isChecked and checkboxNumber as needed
+                    // For example, you might want to store this information or perform some other action
+                    tableNames.Add(checkboxName);
+                }
+            }
+
+            return View("EAColumnSelectionView", tableNames);
+        }
+
+        public IActionResult EADataView()
+        {
+            return View("EADataView");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
