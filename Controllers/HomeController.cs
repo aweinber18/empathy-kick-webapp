@@ -47,11 +47,27 @@ namespace EmpathyKick.Controllers
 			
 
             FormattableString sql = FormattableStringFactory.Create($"SELECT  o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID where o.OrganizationName = '{organizationName}'  GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;"); ;
-            var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
-            Organization myOrg = topOrganizations[0];
+            var organization = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
+            Organization myOrg = organization[0];
+            var number = myOrg.AddressId;
+			
+            FormattableString addressSQL = FormattableStringFactory.Create($"SELECT Address FROM Address WHERE AddressID = '{number}' ;");
+			FormattableString regionSQL = FormattableStringFactory.Create($"SELECT Region FROM Address WHERE AddressID = '{number}' ;");
+			FormattableString citySQL = FormattableStringFactory.Create($"SELECT City FROM Address WHERE AddressID = '{number}' ;");
+			FormattableString countrySQL = FormattableStringFactory.Create($"SELECT Country FROM Address WHERE AddressID = '{number}' ;");
+			
+            
+            var address = _context.Database.SqlQuery<string>(addressSQL).ToList();
+			var region = _context.Database.SqlQuery<string>(regionSQL).ToList();
+			var city = _context.Database.SqlQuery<string>(citySQL).ToList();
+			var country = _context.Database.SqlQuery<string>(countrySQL).ToList();
+			ViewData["address"] = address[0];
+			ViewData["region"] = region[0];
+			ViewData["city"] = city[0];
+			ViewData["country"] = country[0];
 
 
-            return View(myOrg);
+			return View(myOrg);
         }
 
         public IActionResult Register()
