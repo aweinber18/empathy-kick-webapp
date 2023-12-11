@@ -21,7 +21,7 @@
             @foreach (var pair in tableColumnPairs)
                 {
                 <th bgcolor="lightgrey">
-                    <input type="checkbox" id="@pair.ColumnName" name="Checkbox@(pair.TableName + "," + pair.ColumnName)" value="">
+                    <input type="checkbox" id="@pair.ColumnName" name="Checkbox@(pair.TableName + ":" + pair.ColumnName)" value="">
                     @pair.ColumnName &nbsp;
                 </th>
                 }

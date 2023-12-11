@@ -85,8 +85,11 @@ namespace EmpathyKick.Controllers
         public IActionResult EADataView()
         {
             var formKeys = Request.Form.Keys;
+
+            List<string> tableNames = new List<string>();
             List<string> columnNames = new List<string>();
             List<string> whereClauses = new List<string>();
+
             foreach (var key in formKeys)
             {
                 if (key.StartsWith("Checkbox"))
@@ -95,12 +98,18 @@ namespace EmpathyKick.Controllers
                     string checkboxValue = Request.Form[key];
 
                     // Process the checkbox data as needed
-                    bool isChecked = checkboxValue == "on";
-                    string checkboxName = key.Substring("Checkbox".Length); // Extract the number from the key
+                    bool isChecked = checkboxValue == "";
 
-                    // Now you can use isChecked and checkboxNumber as needed
-                    // For example, you might want to store this information or perform some other action
-                    columnNames.Add(checkboxName);
+                    string checkboxName = key.Substring("Checkbox".Length); // Extract the names from the key
+                    // Now you can use isChecked and checkboxName as needed
+
+                    string tableName = checkboxName.Substring(0, checkboxName.IndexOf(":"));
+                    string columnName = checkboxName.Substring(checkboxName.IndexOf(":") + 1);
+                    if (isChecked)
+                    {
+                        tableNames.Add(tableName);
+                        columnNames.Add(columnName);
+                    }
                 } 
                 else if (key.StartsWith("Textarea"))
                 {
@@ -109,6 +118,7 @@ namespace EmpathyKick.Controllers
                 }
             }
             var model = new Dictionary<string, List<string>>();
+            model.Add("table", tableNames);
             model.Add("col", columnNames);
             model.Add("where", whereClauses);
             
