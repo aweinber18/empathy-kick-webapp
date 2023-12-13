@@ -1,7 +1,7 @@
 ﻿
 @{
     ViewData["Title"] = "Login";
-    var newUser = HttpContext.Session.GetString("newUser");
+    var newUser = @Context.Session.GetString("NewUser");
 }
 
 <h1>Login</h1>
@@ -17,7 +17,7 @@
         <hr />
         @Html.ValidationSummary(true)
         <div class="form-group">
-            <div class="col-md-10" id="NewUser">@newUser has been registered</div>
+            <div class="col-md-10" id="NewUser">@newUser</div>
         </div>
         @if (ViewBag.Message != null)
         {

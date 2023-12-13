@@ -98,8 +98,7 @@ namespace EmpathyKick.Controllers
         
         ModelState.Clear();
         
-		var newUser = "Successfully Registered Mr. " + 
-		user.FirstName + " " + user.LastName;
+		var newUser = "Successfully Registered " + user.Username;
         HttpContext.Session.SetString("NewUser",newUser);
         return RedirectToAction("Login");
        }
