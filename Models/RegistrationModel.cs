@@ -17,13 +17,14 @@ namespace EmpathyKick.Models
         [Required(ErrorMessage = "First name is required")]
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Lase name is required")]
+        [Required(ErrorMessage = "Last name is required")]
         public string LastName { get; set; }
 
         public DateTime? ActiveDate { get; set; }
         public DateTime? InactiveDate { get; set; }
 
         [Required(ErrorMessage = "Phone Number is required")]
+        [Phone]
         public string Phone { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
