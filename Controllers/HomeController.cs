@@ -72,17 +72,12 @@ namespace EmpathyKick.Controllers
         }
 
 
-        //public ActionResult Register()
-        //{
-
-        //   return View(_context.User.ToList());
-        //}
+     
         public ActionResult Register()
         {
 
-            {
+            
                 return View();
-            }
 
         }
 
@@ -102,12 +97,38 @@ namespace EmpathyKick.Controllers
             }
         
         ModelState.Clear();
-		ViewBag.Message = "Successfully Registered Mr. " + 
+        
+		var newUser = "Successfully Registered Mr. " + 
 		user.FirstName + " " + user.LastName;
-
+        HttpContext.Session.SetString("NewUser",newUser);
         return RedirectToAction("Login");
        }
+        public ActionResult Login()
+        {
 
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Login(User user)
+        {
+           
+            {
+                var get_user = _context.User.Single(p => p.Username == user.Username
+                && p.Password == user.Password);
+                if (get_user != null)
+                {
+                    HttpContext.Session.SetString("UserId", get_user.UserId.ToString());
+                    HttpContext.Session.SetString("Username", get_user.Username.ToString());
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ViewBag.Message = "Username or Password does not match";
+                }
+
+            }
+            return View();
+        }
         public IActionResult EATableSelectionView()
         {
           //pass in the context to the view so that we can access the database

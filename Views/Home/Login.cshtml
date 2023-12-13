@@ -1,7 +1,134 @@
 ﻿
 @{
     ViewData["Title"] = "Login";
+    var newUser = HttpContext.Session.GetString("newUser");
 }
 
 <h1>Login</h1>
 
+@model EmpathyKick.Models.User
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>User Account</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        <div class="form-group">
+            <div class="col-md-10" id="NewUser">@newUser has been registered</div>
+        </div>
+        @if (ViewBag.Message != null)
+        {
+
+            <div class="form-group">
+                <div class="col-md-10" id="ViewBagData">@ViewBag.Message</div>
+            </div>
+        }
+        <div class="form-group">
+            @Html.LabelFor(model => model.Username, new { @class = "control-label col-md-2" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.Username, new { @required = "required" })
+                @Html.ValidationMessageFor(model => model.Username)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Password, new { @required = "required" })
+                @Html.ValidationMessageFor(model => model.Password)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Login" class="btn btn-primary" id="submitBtn" disabled />
+            </div>
+        </div>
+    </div>
+    <style>
+        #submitBtn:disabled {
+            background-color: #dddddd; /* Change this to the desired grey color */
+        }
+
+        #ViewBagData {
+            color: red;
+            font-weight: bold;
+            background-color: yellow;
+            padding: 10px;
+            margin: 10px;
+            border: 2px solid red;
+            box-shadow: 2px 2px 5px grey; /* Adjust as needed */
+        }
+
+        #NewUser{
+            color: black;
+            font-weight: bold;
+            background-color: cornflowerblue;
+            padding: 10px;
+            margin: 10px;
+            border: 2px solid black;
+            box-shadow: 2px 2px 5px grey; /* Adjust as needed */
+        }
+
+    </style>
+}
+
+
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var message = @Html.Raw(Json.Serialize(ViewBag.Message));
+            if (message == null) {
+                // Trigger form submission to initiate validation
+                $('form').submit();
+            } else {
+                $('#submitBtn').prop('disabled', true);
+            }
+            // Enable/disable submit button based on form validity
+            updateSubmitButtonState();
+
+
+            $('form').change(function () {
+                updateSubmitButtonState();
+            });
+
+            function updateSubmitButtonState() {
+                var isValid = true;
+                var emailErrorSpan = document.getElementById('Email-error');
+                var emailBad = false;
+
+                // Check if the element exists
+                if (emailErrorSpan !== null) {
+                    // The span element with id 'Email-error' exists
+                    console.log('The span element exists.');
+                    emailBad = true;
+                    console.log(emailBad);
+                } else {
+                    // The span element with id 'Email-error' does not exist
+                    console.log('The span element does not exist.');
+                    console.log(emailBad);
+                }
+
+                $('form input').each(function () {
+                    if ($(this).val() === '') {
+                        isValid = false;
+                        return false; // break out of the each loop
+                    } else if (emailBad) {
+                        isValid = false;
+                        return false;
+                    }
+                });
+
+                $('#submitBtn').prop('disabled', !isValid);
+            }
+        });
+    </script>
+}
