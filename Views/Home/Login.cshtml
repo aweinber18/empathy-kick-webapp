@@ -1,13 +1,12 @@
 ﻿
-
 @{
-    ViewData["Title"] = "Register";
-    
+    ViewData["Title"] = "Login";
+    var newUser = @Context.Session.GetString("NewUser");
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>Login</h1>
 
- @model EmpathyKick.Models.User
+@model EmpathyKick.Models.User
 
 @using (Html.BeginForm())
 {
@@ -17,6 +16,12 @@
         <h4>User Account</h4>
         <hr />
         @Html.ValidationSummary(true)
+        @if (newUser != null)
+        {
+            <div id="banner" class="form-group" style="display: none;">
+                <div class="col-md-10" id="NewUser">@newUser</div>
+            </div>
+        }
         @if (ViewBag.Message != null)
         {
 
@@ -41,44 +46,8 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FirstName, new { @required = "required" })
-                @Html.ValidationMessageFor(model => model.FirstName)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.LastName, new { @required = "required" })
-                @Html.ValidationMessageFor(model => model.LastName)
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Phone, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Phone, new { @required = "required" })
-                @Html.ValidationMessageFor(model => model.Phone)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Email, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Email, new { @required = "required" })
-                @Html.ValidationMessageFor(model => model.Email)
-            </div>
-        </div>
-
-        
-
-
-        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Register" class="btn btn-primary" id="submitBtn" disabled />
+                <input type="submit" value="Login" class="btn btn-primary" id="submitBtn" disabled />
             </div>
         </div>
     </div>
@@ -97,6 +66,16 @@
             box-shadow: 2px 2px 5px grey; /* Adjust as needed */
         }
 
+        #NewUser{
+            color: black;
+            font-weight: bold;
+            background-color: cornflowerblue;
+            padding: 10px;
+            margin: 10px;
+            border: 2px solid black;
+            box-shadow: 2px 2px 5px grey; /* Adjust as needed */
+        }
+
     </style>
 }
 
@@ -108,7 +87,14 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
     <script>
+        // Display the banner when the page loads
         $(document).ready(function () {
+            $('#banner').fadeIn('slow');
+
+            // Hide the banner after 5 seconds (adjust the timeout as needed)
+            setTimeout(function () {
+                $('#banner').fadeOut('slow');
+            }, 4000);
             var message = @Html.Raw(Json.Serialize(ViewBag.Message));
             if (message == null) {
                 // Trigger form submission to initiate validation
@@ -116,9 +102,9 @@
             } else {
                 $('#submitBtn').prop('disabled', true);
             }
-                // Enable/disable submit button based on form validity
-                updateSubmitButtonState();
-          
+            // Enable/disable submit button based on form validity
+            updateSubmitButtonState();
+
 
             $('form').change(function () {
                 updateSubmitButtonState();
@@ -154,7 +140,6 @@
                 $('#submitBtn').prop('disabled', !isValid);
             }
         });
+
     </script>
 }
-
-

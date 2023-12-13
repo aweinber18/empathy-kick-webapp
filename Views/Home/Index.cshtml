@@ -13,9 +13,24 @@
         
     }
 
-
+    var username = @Context.Session.GetString("Username");
+    var fromLogin = @Context.Session.GetString("RedirectFromLogin");
+    @Context.Session.SetString("RedirectFromLogin", "False");
+    var fromLogOut = @Context.Session.GetString("RedirectFromLogOut");
+    @Context.Session.SetString("RedirectFromLogOut", "False");
 }
-
+@if (username != null && fromLogin == "True")
+{
+    <div id="banner" class="alert alert-info" style="display: none;">
+        <strong>Logged in as @username </strong> 
+    </div>
+}
+@if (fromLogOut == "True")
+{
+    <div id="banner" class="alert alert-info" style="display: none;">
+        <strong>Logged Out</strong>
+    </div>
+}
 <div class="container mt-5">
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
@@ -74,6 +89,11 @@
                 right: 0;
                 left: auto;
             }
+
+            #banner {
+                margin-top: 10px;
+                padding: 10px;
+            }
         </style>
         <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -86,3 +106,16 @@
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        // Display the banner when the page loads
+        $(document).ready(function () {
+            $('#banner').fadeIn('slow');
+
+            // Hide the banner after 5 seconds (adjust the timeout as needed)
+            setTimeout(function () {
+                $('#banner').fadeOut('slow');
+            }, 4000);
+        });
+    </script>
+}

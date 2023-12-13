@@ -32,12 +32,26 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
-                    <ul class="navbar-nav ml-auto">
-                        <!-- ml-auto will push the content to the right -->
-                        <li class="nav-item">
-                            <a class="btn btn-success" asp-area="" asp-controller="Home" asp-action="Register">Register</a>
-                        </li>
-                    </ul>
+                    @if (@Context.Session.GetString("Username") == null || @Context.Session.GetString("Username") == "")
+                    {
+                        <ul class="navbar-nav ml-auto">
+                            <!-- ml-auto will push the content to the right -->
+                            <li class="nav-item">
+                                <a class="btn btn-success" asp-area="" asp-controller="Home" asp-action="Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-success" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                            </li>
+                        </ul>
+                    } else
+                    {
+                        <ul class="navbar-nav ml-auto">
+                            <!-- ml-auto will push the content to the right -->
+                            <li class="nav-item">
+                                <a class="btn btn-success" asp-area="" asp-controller="Home" asp-action="LogOut">Log Out</a>
+                            </li>
+                        </ul>
+                    }
                 </div>
             </div>
         </nav>
@@ -47,10 +61,10 @@
             @RenderBody()
         </main>
     </div>
-
+  
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - EmpathyKick - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - EmpathyKick
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
