@@ -24,8 +24,8 @@ namespace EmpathyKick.Controllers
             {
                 _context.Database.GetDbConnection().Open();
             }
- 
-            FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;"); 
+
+            FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;");
             var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
 
             _context.Database.GetDbConnection().Close();
@@ -36,45 +36,77 @@ namespace EmpathyKick.Controllers
 
         }
         [HttpPost]
-        public IActionResult Privacy(Organization org)
+        public IActionResult Privacy()
         {
-            
-            return View(org);
+
+            return View("Privacy");
         }
         public IActionResult ProfilePage(string organizationName)
         {
             ViewData["OrganizationName"] = organizationName;
-			
+
 
             FormattableString sql = FormattableStringFactory.Create($"SELECT  o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID where o.OrganizationName = '{organizationName}'  GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;"); ;
             var organization = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
             Organization myOrg = organization[0];
             var number = myOrg.AddressId;
-			
+
             FormattableString addressSQL = FormattableStringFactory.Create($"SELECT Address FROM Address WHERE AddressID = '{number}' ;");
-			FormattableString regionSQL = FormattableStringFactory.Create($"SELECT Region FROM Address WHERE AddressID = '{number}' ;");
-			FormattableString citySQL = FormattableStringFactory.Create($"SELECT City FROM Address WHERE AddressID = '{number}' ;");
-			FormattableString countrySQL = FormattableStringFactory.Create($"SELECT Country FROM Address WHERE AddressID = '{number}' ;");
+            FormattableString regionSQL = FormattableStringFactory.Create($"SELECT Region FROM Address WHERE AddressID = '{number}' ;");
+            FormattableString citySQL = FormattableStringFactory.Create($"SELECT City FROM Address WHERE AddressID = '{number}' ;");
+            FormattableString countrySQL = FormattableStringFactory.Create($"SELECT Country FROM Address WHERE AddressID = '{number}' ;");
             FormattableString amountDonatedSQL = FormattableStringFactory.Create($" Select SUM(Amount) AS TotalDonations FROM Donation where OrganizationID = '{myOrg.OrganizationId}' GROUP BY OrganizationID");
-            
+
             var address = _context.Database.SqlQuery<string>(addressSQL).ToList();
-			var region = _context.Database.SqlQuery<string>(regionSQL).ToList();
-			var city = _context.Database.SqlQuery<string>(citySQL).ToList();
-			var country = _context.Database.SqlQuery<string>(countrySQL).ToList();
+            var region = _context.Database.SqlQuery<string>(regionSQL).ToList();
+            var city = _context.Database.SqlQuery<string>(citySQL).ToList();
+            var country = _context.Database.SqlQuery<string>(countrySQL).ToList();
             var amount = _context.Database.SqlQuery<Decimal>(amountDonatedSQL).ToList();
-			ViewData["address"] = address[0];
-			ViewData["region"] = region[0];
-			ViewData["city"] = city[0];
-			ViewData["country"] = country[0];
+            ViewData["address"] = address[0];
+            ViewData["region"] = region[0];
+            ViewData["city"] = city[0];
+            ViewData["country"] = country[0];
             ViewData["amountDonated"] = amount[0];
 
-			return View(myOrg);
+            return View(myOrg);
         }
 
-        public IActionResult Register()
+
+        //public ActionResult Register()
+        //{
+
+        //   return View(_context.User.ToList());
+        //}
+        public ActionResult Register()
         {
-            return View("Register");
+
+            {
+                return View();
+            }
+
         }
+
+        [HttpPost]
+        public IActionResult Register(User user)
+        {
+            var get_user = _context.User.FirstOrDefault(p => p.Username == user.Username);
+            if (get_user == null)
+            {
+                _context.User.Add(user);
+                _context.SaveChanges();
+            }
+            else
+            {
+                ViewBag.Message = "UserName already exists" + user.Username;
+                return View();
+            }
+        
+        ModelState.Clear();
+		ViewBag.Message = "Successfully Registered Mr. " + 
+		user.FirstName + " " + user.LastName;
+
+        return RedirectToAction("Login");
+       }
 
         public IActionResult EATableSelectionView()
         {
