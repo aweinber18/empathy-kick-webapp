@@ -19,6 +19,7 @@
         @Html.ValidationSummary(true)
         @if (ViewBag.Message != null)
         {
+
             <div class="form-group">
                 <div class="col-md-10" id="ViewBagData">@ViewBag.Message</div>
             </div>
@@ -108,9 +109,12 @@
 
     <script>
         $(document).ready(function () {
-            if (@ViewBag == null) {
+            var message = @Html.Raw(Json.Serialize(ViewBag.Message));
+            if (message == null) {
                 // Trigger form submission to initiate validation
                 $('form').submit();
+            } else {
+                $('#submitBtn').prop('disabled', true);
             }
                 // Enable/disable submit button based on form validity
                 updateSubmitButtonState();
@@ -122,7 +126,6 @@
 
             function updateSubmitButtonState() {
                 var isValid = true;
-
                 var emailErrorSpan = document.getElementById('Email-error');
                 var emailBad = false;
 

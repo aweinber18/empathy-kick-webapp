@@ -97,7 +97,7 @@ namespace EmpathyKick.Controllers
             }
             else
             {
-                ViewBag.Message = "UserName already exists " + user.Username;
+                ViewBag.Message = "Username '" + user.Username +"' already exists ";
                 return View();
             }
         
