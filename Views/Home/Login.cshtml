@@ -16,9 +16,12 @@
         <h4>User Account</h4>
         <hr />
         @Html.ValidationSummary(true)
-        <div class="form-group">
-            <div class="col-md-10" id="NewUser">@newUser</div>
+        @if (newUser != null)
+        {
+            <div class="form-group">
+                <div class="col-md-10" id="NewUser">@newUser</div>
         </div>
+        }
         @if (ViewBag.Message != null)
         {
 

@@ -20,26 +20,18 @@ namespace EmpathyKick.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if (_context.Database.GetDbConnection().State != System.Data.ConnectionState.Open)
-            {
-                _context.Database.GetDbConnection().Open();
-            }
-
+           
             FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;");
             var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
 
             _context.Database.GetDbConnection().Close();
             return View(topOrganizations);
-
-
-            //return View();
-
         }
-        [HttpPost]
+        
         public IActionResult Privacy()
         {
 
-            return View("Privacy");
+            return View();
         }
         public IActionResult ProfilePage(string organizationName)
         {
@@ -75,10 +67,7 @@ namespace EmpathyKick.Controllers
      
         public ActionResult Register()
         {
-
-            
-                return View();
-
+            return View();
         }
 
         [HttpPost]
@@ -118,6 +107,7 @@ namespace EmpathyKick.Controllers
                 {
                     HttpContext.Session.SetString("UserId", get_user.UserId.ToString());
                     HttpContext.Session.SetString("Username", get_user.Username.ToString());
+                    HttpContext.Session.SetString("RedirectFromLogin", "True");
                     return RedirectToAction("Index");
                 }
                 else
