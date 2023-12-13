@@ -118,6 +118,15 @@ namespace EmpathyKick.Controllers
             }
             return View();
         }
+
+        public ActionResult LogOut()
+        {
+            HttpContext.Session.SetString("UserId", "");
+            HttpContext.Session.SetString("Username", "");
+            HttpContext.Session.SetString("RedirectFromLogin", "False");
+            HttpContext.Session.SetString("RedirectFromLogOut", "True");
+            return RedirectToAction("Index");
+        }
         public IActionResult EATableSelectionView()
         {
           //pass in the context to the view so that we can access the database

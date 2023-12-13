@@ -16,12 +16,19 @@
     var username = @Context.Session.GetString("Username");
     var fromLogin = @Context.Session.GetString("RedirectFromLogin");
     @Context.Session.SetString("RedirectFromLogin", "False");
-
+    var fromLogOut = @Context.Session.GetString("RedirectFromLogOut");
+    @Context.Session.SetString("RedirectFromLogOut", "False");
 }
 @if (username != null && fromLogin == "True")
 {
     <div id="banner" class="alert alert-info" style="display: none;">
         <strong>Logged in as @username </strong> 
+    </div>
+}
+@if (fromLogOut == "True")
+{
+    <div id="banner" class="alert alert-info" style="display: none;">
+        <strong>Logged Out</strong>
     </div>
 }
 <div class="container mt-5">
