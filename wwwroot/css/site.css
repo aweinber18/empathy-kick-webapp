@@ -14,8 +14,11 @@ html {
 }
 
 body {
-    margin-bottom: 200px; /* Adjust as needed */
+
+    padding-bottom: 200px; /* Instead of margin-bottom */
 }
+
+
 
 .container {
     min-height: 100%; /* Ensure the container takes up at least the full viewport height */

@@ -16,6 +16,7 @@ namespace EmpathyKick.Models
         public DbSet<Addresses> Addresses { get; set; }
         public DbSet<Donations> Donations { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<EmpathyAdmin> EmpathyAdmin { get; set; }
 
         //    public IList<string> GetColumnNames(IList<string> tables)
         //    {
