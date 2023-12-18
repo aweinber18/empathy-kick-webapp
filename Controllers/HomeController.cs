@@ -73,11 +73,22 @@ namespace EmpathyKick.Controllers
         [HttpPost]
         public IActionResult Register(User user)
         {
+
             var get_user = _context.User.FirstOrDefault(p => p.Username == user.Username);
             if (get_user == null)
             {
                 _context.User.Add(user);
                 _context.SaveChanges();
+                bool isAdmin = (Request.Form["isAdmin"] == "on");
+                if (isAdmin) 
+                {
+                    EmpathyAdmin prospectiveAdmin = new EmpathyAdmin();
+                    prospectiveAdmin.UserID = user.UserId;
+                    prospectiveAdmin.AuthorizationDate = null;
+                    prospectiveAdmin.DeauthorizationDate = null;
+                    _context.EmpathyAdmin.Add(prospectiveAdmin);
+                    _context.SaveChanges();
+                }
             }
             else
             {

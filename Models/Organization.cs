@@ -24,4 +24,6 @@ namespace EmpathyKick.Models
         public string LogoFile { get; set; }
         public string? ThemeColor { get; set; }
     }
+
 }
+
