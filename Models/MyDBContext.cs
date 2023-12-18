@@ -45,8 +45,6 @@ namespace EmpathyKick.Models
         //        var tablenames = this.Database.SqlQuery<string>(sql). GetEnumerator();  
         //        return tablenames.;
         //    }
-
-
         //}
 
 

@@ -16,6 +16,4 @@ namespace EmpathyKick.Models
         public string? Frequency { get; set; }
 
     }
-
-
 }
