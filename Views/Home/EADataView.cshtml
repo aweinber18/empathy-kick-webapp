@@ -1,38 +1,32 @@
-﻿@{
-    Dictionary<string, List<string>> data = Model;
-    var tableNames = data.GetValueOrDefault("table");
-    var colNames = data.GetValueOrDefault("col");
-    var where = data.GetValueOrDefault("where");
+﻿@using Microsoft.Data.SqlClient;
+@using System.Data;
+@{
+    SqlDataReader data = Model;
 
-    var rows = new List<List<string>> { 
-                                       new List<string> {"1", "75-31 150TH St.", "Flushing", "NY", "United States", "11367"},
-                                       new List<string> {"2", "5 Reddick Ct.", "Toronto", "ON", "Canada", "M6B 2S1"}       
-                                     };
 }
-<table bgcolor="darkgrey" border="1">
-    <tr>
-        @foreach (var tableName in tableNames) 
-        {
-            <th>@tableName &nbsp; &nbsp;</th>
-        }
-    </tr>
-    <tr>
-        @foreach (var colName in colNames)
-        {
-            <th>@colName &nbsp; &nbsp;</th>
-        }
-     
-    </tr>
-    @foreach (var row in rows)
-    {
+
+<table>
+    <thead>
         <tr>
-            @foreach (var item in row)
+            @for (int i = 0; i < data.FieldCount; i++)
             {
-                <td bgcolor="lightgrey">@item</td>
+                <th>@data.GetName(i)</th>
             }
         </tr>
-    }
+    </thead>
+    <tbody>
+        @while (data.Read())
+        {
+            <tr>
+                @for (int i = 0; i < data.FieldCount; i++)
+                {
+                    <td>@data[i]</td>
+                }
+            </tr>
+        }
+    </tbody>
 </table>
+
 <style>
     table {
         border-collapse: collapse;

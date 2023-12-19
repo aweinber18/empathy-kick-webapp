@@ -21,7 +21,7 @@ namespace EmpathyKick.Data
                 "Card", "CardRegistration", "Tag", "TagRegistration", "Donation", "Invoice", "Product"};
         }
 
-        public IList<TableColumnPair> GetTableAndColumnNames(IList<string> tables) {
+        /*public IList<TableColumnPair> GetTableAndColumnNames(IList<string> tables) {
             var tableStringBuilder = new StringBuilder();
             for (int i = 0; i < tables.Count; i++)
             {
@@ -38,8 +38,8 @@ namespace EmpathyKick.Data
                                                         $"WHERE TABLE_NAME IN " + 
                                                         tablesString + 
                                                         ";");
-            /*var tables = _context.Tables.FromSqlRaw(sql.Format, sql.GetArguments()).ToList();*/
+            *//*var tables = _context.Tables.FromSqlRaw(sql.Format, sql.GetArguments()).ToList();*//*
             return new List<TableColumnPair> { new TableColumnPair("Address", "AddressID"), new TableColumnPair("Address", "Address"), new TableColumnPair("Address", "City"), new TableColumnPair("Address", "Region"), new TableColumnPair("Address", "Country"), new TableColumnPair("Address", "ZIP") };
-        }
+        }*/
     }
 }

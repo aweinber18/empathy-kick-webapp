@@ -1,9 +1,11 @@
 ﻿using EmpathyKick.Models;
+
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
-using EmpathyKick.Data;
+using static EmpathyKick.Models.MyDBContext;
+using Microsoft.Data.SqlClient;
 
 namespace EmpathyKick.Controllers
 {
@@ -85,11 +87,12 @@ namespace EmpathyKick.Controllers
         public IActionResult EADataView()
         {
             var formKeys = Request.Form.Keys;
-
+            var queryStr = "";
             List<string> tableNames = new List<string>();
             List<string> columnNames = new List<string>();
             List<string> whereClauses = new List<string>();
-
+            var pairs = new List<TableColumnPair>();
+            SqlDataReader data;
             foreach (var key in formKeys)
             {
                 if (key.StartsWith("Checkbox"))
@@ -114,15 +117,23 @@ namespace EmpathyKick.Controllers
                 else if (key.StartsWith("Textarea"))
                 {
                     string textareaValue = Request.Form[key];
-                    whereClauses.Add(textareaValue);
+                    if (!textareaValue.Contains(",") && !textareaValue.Equals(""))
+                        whereClauses.Add(textareaValue);
+                }
+
+                for (int i = 0; i < tableNames.Count; i++)
+                {
+                    pairs.Add(new TableColumnPair(tableNames[i], columnNames[i]));
                 }
             }
-            var model = new Dictionary<string, List<string>>();
+            queryStr = _context.GetEADataQuery(pairs, whereClauses);
+            data = _context.GetEAData(queryStr);
+            /*var model = new Dictionary<string, List<string>>();
             model.Add("table", tableNames);
             model.Add("col", columnNames);
-            model.Add("where", whereClauses);
+            model.Add("where", whereClauses);*/
             
-            return View("EADataView", model);
+            return View("EADataView", data);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
