@@ -79,7 +79,7 @@ namespace EmpathyKick.Controllers
             {
                 _context.User.Add(user);
                 _context.SaveChanges();
-                bool isAdmin = (Request.Form["isAdmin"] == "on");
+                bool isAdmin = (Request.Form["isEmpathyAdmin"] == "on");
                 if (isAdmin) 
                 {
                     EmpathyAdmin prospectiveAdmin = new EmpathyAdmin();
