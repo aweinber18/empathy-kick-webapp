@@ -78,6 +78,15 @@ namespace EmpathyKick.Models
 
             return organizationsData;
         }
+
+        public static bool IsEmpathyAdmin(this MyDBContext context, int id) 
+        {
+            bool isAdmin = context.EmpathyAdmin.Where(admin => admin.UserID == id)
+                .Where(admin => admin.AuthorizationDate != null)
+                .Where(admin => admin.DeauthorizationDate == null).Any();
+            return isAdmin;
+
+        }
     }
 
 }

@@ -128,6 +128,13 @@ namespace EmpathyKick.Controllers
                     HttpContext.Session.SetString("UserId", get_user.UserId.ToString());
                     HttpContext.Session.SetString("Username", get_user.Username.ToString());
                     HttpContext.Session.SetString("RedirectFromLogin", "True");
+                    if (_context.IsEmpathyAdmin(get_user.UserId))
+                    {
+                        HttpContext.Session.SetString("EmpathyAdmin", "True");
+                    } else
+                    {
+                        HttpContext.Session.SetString("EmpathyAdmin", "False");
+                    }
                     return RedirectToAction("Index");
                 }
                 else
@@ -141,6 +148,7 @@ namespace EmpathyKick.Controllers
 
         public ActionResult LogOut()
         {
+            HttpContext.Session.SetString("EmpathyAdmin", "");
             HttpContext.Session.SetString("UserId", "");
             HttpContext.Session.SetString("Username", "");
             HttpContext.Session.SetString("RedirectFromLogin", "False");
