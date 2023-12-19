@@ -26,7 +26,7 @@ namespace EmpathyKick.Controllers
             var topOrganizations =  _context.Organization.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToArray();
             var UserloggedIn = HttpContext.Session.GetString("UserId");
             Organization[] recOrgs = new Organization[9];
-            if (UserloggedIn != null)
+            if (UserloggedIn != null && UserloggedIn != "")
             {
                 recOrgs = _context.getOrganizationsDonatedTo(Int32.Parse(UserloggedIn));
             }
