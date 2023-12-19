@@ -12,9 +12,9 @@ namespace EmpathyKick.Models
         {
         }
 
-        public DbSet<Organization> Organizations { get; set; }
-        public DbSet<Addresses> Addresses { get; set; }
-        public DbSet<Donations> Donations { get; set; }
+        public DbSet<Organization> Organization { get; set; }
+        public DbSet<Addresses> Address { get; set; }
+        public  DbSet<Donations> Donation { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<EmpathyAdmin> EmpathyAdmin { get; set; }
 
@@ -36,7 +36,7 @@ namespace EmpathyKick.Models
         //                                                        $"WHERE TABLE_NAME IN " +
         //                                                        tablesString +
         //                                                        ";");
-        //        /*var tables = _context.Tables.FromSqlRaw(sql.Format, sql.GetArguments()).ToList();*/
+        //        /*var tables = _context.Tables.FromSqlRaw(sql.Format, sql.GetArguments()).ToList();*//*
         //        return new List<string> { "AddressID", "Address", "City", "Region", "Country", "ZIP" };
         //    }
         //    public IList<string> GetTableNames()
@@ -45,9 +45,39 @@ namespace EmpathyKick.Models
         //        var tablenames = this.Database.SqlQuery<string>(sql). GetEnumerator();  
         //        return tablenames.;
         //    }
+        //}*/*
+   
+        //public List<int> getOrganizationsDonatedTo(this MyDBContext context, int id) 
+        //{
+        //    var organizations = Donations
+        //      .Where(donation => donation.UserId == id)
+        //      .Select(donation => donation.OrganizationId)
+        //      .Distinct()
+        //      .ToList();
+
+        //    var organizationsData = Organizations
+        //        .Where(org => organizations.Contains(org.OrganizationId))
+        //        .ToList();
+        //    return organizationsData;
         //}
 
+    }
 
+    public static class MyDBContextExtensions {
+        public static Organization[] getOrganizationsDonatedTo(this MyDBContext context, int id)
+        {
+            var organizations = context.Donation
+              .Where(donation => donation.UserId == id)
+              .Select(donation => donation.OrganizationId)
+              .Distinct()
+              .ToList();
+
+            var organizationsData = context.Organization
+                .Where(org => organizations.Contains(org.OrganizationId))
+                .ToArray();
+
+            return organizationsData;
+        }
     }
 
 }

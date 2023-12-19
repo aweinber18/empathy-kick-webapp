@@ -3,22 +3,24 @@
     ViewData["Title"] = "Home Page";
     List<Organization> organizations = new List<Organization>(9);
     Organization[] arr = new Organization[9];
+    Organization[] reccomendedOrganizations = new Organization[9];
     @if (Model != null)
-    {    
-        foreach (var organization in Model)
     {
-        organizations.Add(organization);
-    }
-        arr = organizations.ToArray();// Your existing code to iterate over Model
-        
+
+        Tuple<Organization[], Organization[]> tuple = Model;
+        arr = tuple.Item1;
+        reccomendedOrganizations = tuple.Item2;
+
     }
 
+    var UserloggedIn = @Context.Session.GetString("UserId");
     var username = @Context.Session.GetString("Username");
     var fromLogin = @Context.Session.GetString("RedirectFromLogin");
     @Context.Session.SetString("RedirectFromLogin", "False");
     var fromLogOut = @Context.Session.GetString("RedirectFromLogOut");
     @Context.Session.SetString("RedirectFromLogOut", "False");
 }
+
 @if (username != null && fromLogin == "True")
 {
     <div id="banner" class="alert alert-info" style="display: none;">
@@ -55,6 +57,33 @@
                         }
                     </div>
                 </div>
+            }
+            <br />
+            @if(UserloggedIn != null)
+            {
+
+               
+                @for (int i= 0;i < reccomendedOrganizations.Length; i +=3)
+                 {
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                        <div class="card-deck">
+                            @for (int j = 0; j < 3 && i + j < reccomendedOrganizations.Length; j++)
+                            {
+
+                                <div class="card">
+                                    <a asp-action="ProfilePage" asp-route-organizationName="@reccomendedOrganizations[i + j].OrganizationName">
+                                        <div class="card-body">
+                                            <img src="~/LogoFiles/@reccomendedOrganizations[i + j].LogoFile" class="img-fluid" alt="Organization Logo">
+                                            <h5 class="card-title">@reccomendedOrganizations[i + j].OrganizationName</h5>
+                                            <p class="card-text">ID: @reccomendedOrganizations[i + j].OrganizationId</p>
+                                        </div>
+                                    </a>
+                                </div>
+
+                            }
+                        </div>
+                    </div>
+                 }
             }
 
         </div>
