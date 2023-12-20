@@ -1,4 +1,5 @@
 ﻿using EmpathyKick.Models;
+using EmpathyKick.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
@@ -154,6 +155,11 @@ namespace EmpathyKick.Controllers
             HttpContext.Session.SetString("RedirectFromLogin", "False");
             HttpContext.Session.SetString("RedirectFromLogOut", "True");
             return RedirectToAction("Index");
+        }
+        public IActionResult PendingEAView()
+        {
+            User[] UsersRequestingEAship = _context.GetPendingEmpathyAdmins();
+            return View("PendingEAView", UsersRequestingEAship);
         }
         public IActionResult EATableSelectionView()
         {
