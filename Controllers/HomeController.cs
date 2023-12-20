@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
+using System.Net;
 
 namespace EmpathyKick.Controllers
 {
@@ -71,12 +72,16 @@ namespace EmpathyKick.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(User user)
+        public IActionResult Register(User user, Addresses address)
         {
 
             var get_user = _context.User.FirstOrDefault(p => p.Username == user.Username);
             if (get_user == null)
             {
+                //_context.Address.Add(address);
+                //_context.SaveChanges();
+
+                user.AddressID = address.AddressId;
                 _context.User.Add(user);
                 _context.SaveChanges();
                 bool isAdmin = (Request.Form["isEmpathyAdmin"] == "on");

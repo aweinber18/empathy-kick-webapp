@@ -13,10 +13,6 @@
 {
     @Html.AntiForgeryToken()
 
-   <div class="form-horizontal">
-        <div class="row">
-          
-         <div class="col-md-6">
         <h4>User Account</h4>
         <hr />
         @Html.ValidationSummary(true)
@@ -27,9 +23,15 @@
                 <div class="col-md-10" id="ViewBagData">@ViewBag.Message</div>
             </div>
         }
+
+    <div class="form-horizontal">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-6">
         <div class="form-group">
             @Html.LabelFor(model => model.Username, new { @class = "control-label col-md-2" })
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 @Html.EditorFor(model => model.Username, new { @required = "required" })
                 @Html.ValidationMessageFor(model => model.Username)
             </div>
@@ -76,8 +78,8 @@
             </div>
         </div>
         </div>
-        </div>
-        <div class="row">
+        
+        
         <div class="col-md-6">
         <div class="form-group">
             @Html.LabelFor(model => model.Address.Address, new { @class = "control-label col-md-2" })
@@ -110,8 +112,9 @@
                 @Html.ValidationMessageFor(model => model.Address.Country)
             </div>
         </div>
+       </div>
         </div>
-        </div>
+      
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <div class="col-md-6">
@@ -122,6 +125,7 @@
                     <input type="submit" value="Register" class="btn btn-primary" id="submitBtn" disabled />
                 </div>
             </div>
+        </div>
         </div>
     </div>
     <style>
