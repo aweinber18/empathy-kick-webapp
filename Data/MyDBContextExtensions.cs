@@ -5,13 +5,13 @@
     {
         public static Organization[] getOrganizationsDonatedTo(this MyDBContext context, int id)
         {
-            var organizations = context.Donation
+            var organizations = context.Donations
               .Where(donation => donation.UserId == id)
               .Select(donation => donation.OrganizationId)
               .Distinct()
               .ToList();
 
-            var organizationsData = context.Organization
+            var organizationsData = context.Organizations
                 .Where(org => organizations.Contains(org.OrganizationId))
                 .ToArray();
 
