@@ -24,7 +24,7 @@ namespace EmpathyKick.Controllers
         {
 
             FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;");
-            var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToArray();
+            var topOrganizations = _context.Organization.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToArray();
             var UserloggedIn = HttpContext.Session.GetString("UserId");
             Organization[] recOrgs = new Organization[9];
             if (UserloggedIn != null && UserloggedIn != "")
@@ -50,7 +50,7 @@ namespace EmpathyKick.Controllers
 
 
             FormattableString sql = FormattableStringFactory.Create($"SELECT  o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID where o.OrganizationName = '{organizationName}'  GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;"); ;
-            var organization = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
+            var organization = _context.Organization.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
             Organization myOrg = organization[0];
             var number = myOrg.AddressId;
 
