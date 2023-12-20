@@ -1,10 +1,9 @@
 ﻿using EmpathyKick.Models;
-using EmpathyKick.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
-using System;
+using System.Net;
 
 namespace EmpathyKick.Controllers
 {
@@ -24,18 +23,10 @@ namespace EmpathyKick.Controllers
         {
            
             FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;");
-            var topOrganizations =  _context.Organization.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToArray();
-            var UserloggedIn = HttpContext.Session.GetString("UserId");
-            Organization[] recOrgs = new Organization[9];
-            if (UserloggedIn != null && UserloggedIn != "")
-            {
-                recOrgs = _context.getOrganizationsDonatedTo(Int32.Parse(UserloggedIn));
-            }
+            var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
 
-            Tuple<Organization[],Organization[]> tuple = new Tuple<Organization[], Organization[]>(topOrganizations,recOrgs);
-            
-
-            return View(tuple);
+            _context.Database.GetDbConnection().Close();
+            return View(topOrganizations);
         }
         
         public IActionResult Privacy()
@@ -49,7 +40,7 @@ namespace EmpathyKick.Controllers
 
 
             FormattableString sql = FormattableStringFactory.Create($"SELECT  o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID where o.OrganizationName = '{organizationName}'  GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;"); ;
-            var organization = _context.Organization.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
+            var organization = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
             Organization myOrg = organization[0];
             var number = myOrg.AddressId;
 
@@ -81,15 +72,19 @@ namespace EmpathyKick.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(User user)
+        public IActionResult Register(User user, Addresses address)
         {
 
             var get_user = _context.User.FirstOrDefault(p => p.Username == user.Username);
             if (get_user == null)
             {
+                //_context.Address.Add(address);
+                //_context.SaveChanges();
+
+                user.AddressID = address.AddressId;
                 _context.User.Add(user);
                 _context.SaveChanges();
-                bool isAdmin = (Request.Form["isAdmin"] == "on");
+                bool isAdmin = (Request.Form["isEmpathyAdmin"] == "on");
                 if (isAdmin) 
                 {
                     EmpathyAdmin prospectiveAdmin = new EmpathyAdmin();
@@ -122,20 +117,13 @@ namespace EmpathyKick.Controllers
         {
            
             {
-                var get_user = _context.User.SingleOrDefault(p => p.Username == user.Username
+                var get_user = _context.User.Single(p => p.Username == user.Username
                 && p.Password == user.Password);
                 if (get_user != null)
                 {
                     HttpContext.Session.SetString("UserId", get_user.UserId.ToString());
                     HttpContext.Session.SetString("Username", get_user.Username.ToString());
                     HttpContext.Session.SetString("RedirectFromLogin", "True");
-                    if (_context.IsEmpathyAdmin(get_user.UserId))
-                    {
-                        HttpContext.Session.SetString("EmpathyAdmin", "True");
-                    } else
-                    {
-                        HttpContext.Session.SetString("EmpathyAdmin", "False");
-                    }
                     return RedirectToAction("Index");
                 }
                 else
@@ -149,36 +137,18 @@ namespace EmpathyKick.Controllers
 
         public ActionResult LogOut()
         {
-            HttpContext.Session.SetString("EmpathyAdmin", "");
             HttpContext.Session.SetString("UserId", "");
             HttpContext.Session.SetString("Username", "");
             HttpContext.Session.SetString("RedirectFromLogin", "False");
             HttpContext.Session.SetString("RedirectFromLogOut", "True");
             return RedirectToAction("Index");
         }
-        public IActionResult PendingEAView()
-        {
-            var pendingIDs = _context.EmpathyAdmin.Where(admin => admin.AuthorizationDate == null).Select(admin => admin.UserID).ToList();
-            User[] UsersRequestingEAship = _context.User.Where(user => pendingIDs.Contains(user.UserId)).ToArray();
-            EmpathyAdmin[] pendingAdmins = _context.EmpathyAdmin.Where(admin => admin.AuthorizationDate == null).ToArray();
-            Tuple < User[], EmpathyAdmin[]> tuple = new Tuple<User[], EmpathyAdmin[]>(UsersRequestingEAship, pendingAdmins);
-            return View("PendingEAView", tuple);
-        }
-
-
-        [HttpPost]
-        public IActionResult ApproveUser(int userId)
-        {
-            EmpathyAdmin[] admin = _context.EmpathyAdmin.Where(admin => admin.UserID == userId).Distinct().ToArray();
-            admin[0].AuthorizationDate = DateTime.Now;
-            _context.SaveChanges();
-            return RedirectToAction("PendingEAView");
-        }
         public IActionResult EATableSelectionView()
         {
-            //pass in the context to the view so that we can access the database
-            return View("EATableSelectionView", _context);
+          //pass in the context to the view so that we can access the database
+            return View("EATableSelectionView",_context);
         }
+
         public IActionResult EAColumnSelectionView()
         {
             List<string> tableNames = new List<string>();
