@@ -5,9 +5,14 @@
     Tuple<User[], EmpathyAdmin[]> tuple = Model;
     User[] UsersRequestingEAship = tuple.Item1;
     EmpathyAdmin[] pendingAdmins = tuple.Item2;
+    string usernameOfApproved = "";
+    string idOfAprroved = "";
 
 }
 <h2>@ViewData["Title"]</h2>
+<div id="banner" class="alert alert-info" style="display: none;">
+
+</div>
 @if (UsersRequestingEAship != null && UsersRequestingEAship.Length > 0)
 {
     <table class="table">
@@ -40,18 +45,34 @@ else
 {
     <p>No pending empathy admins.</p>
 }
+<style>
+    #banner {
+        margin-top: 10px;
+        padding: 10px;
+    }
+</style>
 
 @section Scripts {
     <script>
-        function approveUser(userId) {
+        // Display the banner when the page loads
+        function makeBanner() {
+            $('#banner').fadeIn('slow');
 
-            
+            // Hide the banner after 5 seconds (adjust the timeout as needed)
+            setTimeout(function () {
+                $('#banner').fadeOut('slow');
+            }, 4000);
+        }
+        function approveUser(userId) {
             $.ajax({
                 url: '/Home/ApproveUser',
                 method: 'POST', 
                 data: { userId: userId }, 
                 success: function (data) {
-                    alert("User with UserId: " + userId + " approved!");
+
+                    document.getElementById("banner").innerText = " id: " + userId + " has been approved to be an admin!";
+                    makeBanner();
+                    location.reload();
                    //prob is still need to refresh to see result
                 },
                 error: function (error) {

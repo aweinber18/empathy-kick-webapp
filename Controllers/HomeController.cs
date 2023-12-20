@@ -164,11 +164,7 @@ namespace EmpathyKick.Controllers
             Tuple < User[], EmpathyAdmin[]> tuple = new Tuple<User[], EmpathyAdmin[]>(UsersRequestingEAship, pendingAdmins);
             return View("PendingEAView", tuple);
         }
-        public IActionResult EATableSelectionView()
-        {
-          //pass in the context to the view so that we can access the database
-            return View("EATableSelectionView",_context);
-        }
+
 
         [HttpPost]
         public IActionResult ApproveUser(int userId)
@@ -178,7 +174,11 @@ namespace EmpathyKick.Controllers
             _context.SaveChanges();
             return RedirectToAction("PendingEAView");
         }
-
+        public IActionResult EATableSelectionView()
+        {
+            //pass in the context to the view so that we can access the database
+            return View("EATableSelectionView", _context);
+        }
         public IActionResult EAColumnSelectionView()
         {
             List<string> tableNames = new List<string>();
