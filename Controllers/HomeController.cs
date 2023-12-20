@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 using System.Net;
+using EmpathyKick.Data;
 
 namespace EmpathyKick.Controllers
 {
@@ -21,14 +22,23 @@ namespace EmpathyKick.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-           
-            FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;");
-            var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToList();
 
-            _context.Database.GetDbConnection().Close();
-            return View(topOrganizations);
+            FormattableString sql = FormattableStringFactory.Create($"SELECT TOP 9 o.OrganizationID AS OrganizationId, o.OrganizationName,o.AddressID AS AddressId, o.TaxID AS TaxId, o.LogoFile, o.ThemeColor, SUM(d.Amount) AS TotalDonations FROM Organization o INNER JOIN Donation d ON o.OrganizationID = d.OrganizationID GROUP BY o.OrganizationID, o.OrganizationName, o.AddressID, o.TaxID, o.LogoFile, o.ThemeColor ORDER BY TotalDonations DESC;");
+            var topOrganizations = _context.Organizations.FromSqlRaw(sql.Format, parameters: sql.GetArguments()).ToArray();
+            var UserloggedIn = HttpContext.Session.GetString("UserId");
+            Organization[] recOrgs = new Organization[9];
+            if (UserloggedIn != null && UserloggedIn != "")
+            {
+
+                recOrgs = _context.getOrganizationsDonatedTo(Int32.Parse(UserloggedIn));
+            }
+
+            Tuple<Organization[], Organization[]> tuple = new Tuple<Organization[], Organization[]>(topOrganizations, recOrgs);
+
+
+            return View(tuple);
         }
-        
+
         public IActionResult Privacy()
         {
 
@@ -115,15 +125,23 @@ namespace EmpathyKick.Controllers
         [HttpPost]
         public ActionResult Login(User user)
         {
-           
+
             {
-                var get_user = _context.User.Single(p => p.Username == user.Username
+                var get_user = _context.User.SingleOrDefault(p => p.Username == user.Username
                 && p.Password == user.Password);
                 if (get_user != null)
                 {
                     HttpContext.Session.SetString("UserId", get_user.UserId.ToString());
                     HttpContext.Session.SetString("Username", get_user.Username.ToString());
                     HttpContext.Session.SetString("RedirectFromLogin", "True");
+                    if (_context.IsEmpathyAdmin(get_user.UserId))
+                    {
+                        HttpContext.Session.SetString("EmpathyAdmin", "True");
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("EmpathyAdmin", "False");
+                    }
                     return RedirectToAction("Index");
                 }
                 else
@@ -137,6 +155,7 @@ namespace EmpathyKick.Controllers
 
         public ActionResult LogOut()
         {
+            HttpContext.Session.SetString("EmpathyAdmin", "");
             HttpContext.Session.SetString("UserId", "");
             HttpContext.Session.SetString("Username", "");
             HttpContext.Session.SetString("RedirectFromLogin", "False");
