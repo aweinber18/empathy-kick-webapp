@@ -28,6 +28,7 @@ namespace EmpathyKick.Controllers
             Organization[] recOrgs = new Organization[9];
             if (UserloggedIn != null && UserloggedIn != "")
             {
+
                 recOrgs = _context.getOrganizationsDonatedTo(Int32.Parse(UserloggedIn));
             }
 
