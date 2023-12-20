@@ -1,5 +1,6 @@
 ﻿using MessagePack;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmpathyKick.Models
 {
@@ -33,6 +34,10 @@ namespace EmpathyKick.Models
        
         public int? AddressID { get; set; }
 
-        public string? THemeColor { get; set; }
+        public string? ThemeColor { get; set; }
+
+        [ForeignKey("AddressID")]
+        public Addresses Address { get; set; }
+
     }
 }
