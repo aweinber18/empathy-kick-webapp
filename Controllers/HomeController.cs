@@ -78,8 +78,6 @@ namespace EmpathyKick.Controllers
             var get_user = _context.User.FirstOrDefault(p => p.Username == user.Username);
             if (get_user == null)
             {
-                //_context.Address.Add(address);
-                //_context.SaveChanges();
 
                 user.AddressID = address.AddressId;
                 _context.User.Add(user);
@@ -117,7 +115,7 @@ namespace EmpathyKick.Controllers
         {
            
             {
-                var get_user = _context.User.Single(p => p.Username == user.Username
+                var get_user = _context.User.FirstOrDefault(p => p.Username == user.Username
                 && p.Password == user.Password);
                 if (get_user != null)
                 {
