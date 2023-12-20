@@ -2,9 +2,9 @@
 @using EmpathyKick.Models
 @{
     ViewData["Title"] = "Pending Empathy Admins";
-    var UsersRequestingEAship = Model;
-    User[] h = new User[8];
-    int g = h.Length;
+    Tuple<User[], EmpathyAdmin[]> tuple = Model;
+    User[] UsersRequestingEAship = tuple.Item1;
+    EmpathyAdmin[] pendingAdmins = tuple.Item2;
 
 }
 <h2>@ViewData["Title"]</h2>
@@ -45,7 +45,19 @@ else
     <script>
         function approveUser(userId) {
 
-            alert("Approved user with UserId: " + userId);
+            
+            $.ajax({
+                url: '/Home/ApproveUser',
+                method: 'POST', 
+                data: { userId: userId }, 
+                success: function (data) {
+                    alert("User with UserId: " + userId + " approved!");
+                   //prob is still need to refresh to see result
+                },
+                error: function (error) {
+                    console.error('Error updating user:', error);
+                }
+            });
         }
     </script>
 }

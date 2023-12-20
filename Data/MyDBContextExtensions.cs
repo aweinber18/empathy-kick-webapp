@@ -26,11 +26,6 @@
             return isAdmin;
 
         }
-        public static User[] GetPendingEmpathyAdmins(this MyDBContext context)
-        {
-            var pendindIDs = context.EmpathyAdmin.Where(admin => admin.AuthorizationDate == null).Select(admin => admin.UserID).ToList();
-            User[] users = context.User.Where(user => pendindIDs.Contains(user.UserId)).ToArray();
-            return users;
-        }
+
     }
 }
