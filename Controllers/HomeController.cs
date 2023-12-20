@@ -127,6 +127,8 @@ namespace EmpathyKick.Controllers
         {
 
             {
+
+
                 var get_user = _context.User.SingleOrDefault(p => p.Username == user.Username
                 && p.Password == user.Password);
                 if (get_user != null)
@@ -161,6 +163,23 @@ namespace EmpathyKick.Controllers
             HttpContext.Session.SetString("RedirectFromLogin", "False");
             HttpContext.Session.SetString("RedirectFromLogOut", "True");
             return RedirectToAction("Index");
+        }
+        public IActionResult PendingEAView()
+        {
+            var pendingIDs = _context.EmpathyAdmin.Where(admin => admin.AuthorizationDate == null).Select(admin => admin.UserID).ToList();
+            User[] UsersRequestingEAship = _context.User.Where(user => pendingIDs.Contains(user.UserId)).ToArray();
+            EmpathyAdmin[] pendingAdmins = _context.EmpathyAdmin.Where(admin => admin.AuthorizationDate == null).ToArray();
+            Tuple<User[], EmpathyAdmin[]> tuple = new Tuple<User[], EmpathyAdmin[]>(UsersRequestingEAship, pendingAdmins);
+            return View("PendingEAView", tuple);
+        }
+
+        [HttpPost]
+        public IActionResult ApproveUser(int userId)
+        {
+            EmpathyAdmin[] admin = _context.EmpathyAdmin.Where(admin => admin.UserID == userId).Distinct().ToArray();
+            admin[0].AuthorizationDate = DateTime.Now;
+            _context.SaveChanges();
+            return RedirectToAction("PendingEAView");
         }
         public IActionResult EATableSelectionView()
         {
