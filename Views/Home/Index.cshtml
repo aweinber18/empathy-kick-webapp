@@ -6,11 +6,9 @@
     Organization[] reccomendedOrganizations = new Organization[9];
     @if (Model != null)
     {
-
         Tuple<Organization[], Organization[]> tuple = Model;
         arr = tuple.Item1;
         reccomendedOrganizations = tuple.Item2;
-
     }
 
     var UserloggedIn = @Context.Session.GetString("UserId");

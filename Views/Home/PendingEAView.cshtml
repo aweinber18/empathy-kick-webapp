@@ -1,0 +1,81 @@
+﻿@using EmpathyKick.Data
+@using EmpathyKick.Models
+@{
+    ViewData["Title"] = "Pending Empathy Admins";
+    Tuple<User[], EmpathyAdmin[]> tuple = Model;
+    User[] UsersRequestingEAship = tuple.Item1;
+    EmpathyAdmin[] pendingAdmins = tuple.Item2;
+    string usernameOfApproved = "";
+    string idOfAprroved = "";
+
+}
+<h2>@ViewData["Title"]</h2>
+<div id="banner" class="alert alert-info" style="display: none;">
+
+</div>
+@if (UsersRequestingEAship != null && UsersRequestingEAship.Length > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>UserId</th>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in UsersRequestingEAship)
+            {
+                <tr>
+                    <td>@user.UserId</td>
+                    <td>@user.Username</td>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>
+                        <button id="approveButton_@user.UserId" class="btn btn-primary" onclick="approveUser(@user.UserId)">Approve</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No pending empathy admins.</p>
+}
+<style>
+    #banner {
+        margin-top: 10px;
+        padding: 10px;
+    }
+</style>
+
+@section Scripts {
+    <script>
+    
+        function makeBanner() {
+            $('#banner').fadeIn('slow');
+
+          
+            setTimeout(function () {
+                $('#banner').fadeOut('slow');
+            }, 4000);
+        }
+        function approveUser(userId) {
+            $.ajax({
+                url: '/Home/ApproveUser',
+                method: 'POST', 
+                data: { userId: userId }, 
+                success: function (data) {
+                    location.reload();
+                   
+                },
+                error: function (error) {
+                    console.error('Error updating user:', error);
+                }
+            });
+        }
+    </script>
+}

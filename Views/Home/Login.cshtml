@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Login";
     var newUser = @Context.Session.GetString("NewUser");
+    Context.Session.SetString("NewUser", "");
 }
 
 <h1>Login</h1>
@@ -16,7 +17,7 @@
         <h4>User Account</h4>
         <hr />
         @Html.ValidationSummary(true)
-        @if (newUser != null)
+        @if (newUser != null && newUser != "")
         {
             <div id="banner" class="form-group" style="display: none;">
                 <div class="col-md-10" id="NewUser">@newUser</div>

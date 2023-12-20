@@ -1,4 +1,5 @@
 ﻿using EmpathyKick.Models;
+using EmpathyKick.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
@@ -155,12 +156,29 @@ namespace EmpathyKick.Controllers
             HttpContext.Session.SetString("RedirectFromLogOut", "True");
             return RedirectToAction("Index");
         }
-        public IActionResult EATableSelectionView()
+        public IActionResult PendingEAView()
         {
-          //pass in the context to the view so that we can access the database
-            return View("EATableSelectionView",_context);
+            var pendingIDs = _context.EmpathyAdmin.Where(admin => admin.AuthorizationDate == null).Select(admin => admin.UserID).ToList();
+            User[] UsersRequestingEAship = _context.User.Where(user => pendingIDs.Contains(user.UserId)).ToArray();
+            EmpathyAdmin[] pendingAdmins = _context.EmpathyAdmin.Where(admin => admin.AuthorizationDate == null).ToArray();
+            Tuple < User[], EmpathyAdmin[]> tuple = new Tuple<User[], EmpathyAdmin[]>(UsersRequestingEAship, pendingAdmins);
+            return View("PendingEAView", tuple);
         }
 
+
+        [HttpPost]
+        public IActionResult ApproveUser(int userId)
+        {
+            EmpathyAdmin[] admin = _context.EmpathyAdmin.Where(admin => admin.UserID == userId).Distinct().ToArray();
+            admin[0].AuthorizationDate = DateTime.Now;
+            _context.SaveChanges();
+            return RedirectToAction("PendingEAView");
+        }
+        public IActionResult EATableSelectionView()
+        {
+            //pass in the context to the view so that we can access the database
+            return View("EATableSelectionView", _context);
+        }
         public IActionResult EAColumnSelectionView()
         {
             List<string> tableNames = new List<string>();
