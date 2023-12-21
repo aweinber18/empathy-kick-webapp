@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 using System.Net;
 using EmpathyKick.Data;
+using Newtonsoft.Json;
 
 namespace EmpathyKick.Controllers
 {
@@ -78,12 +79,15 @@ namespace EmpathyKick.Controllers
      
         public ActionResult Register()
         {
+            var orgs = _context.Organization.ToArray();
+            ViewBag.Organizations = orgs;
             return View();
         }
 
         [HttpPost]
-        public IActionResult Register(User user, Addresses address)
+        public IActionResult Register(User user, Addresses address,string checkboxState)
         {
+            var checkboxStateDictionary = JsonConvert.DeserializeObject<Dictionary<string, bool>>(checkboxState);
 
             var get_user = _context.User.FirstOrDefault(p => p.Username == user.Username);
             if (get_user == null)
@@ -104,6 +108,24 @@ namespace EmpathyKick.Controllers
                     _context.EmpathyAdmin.Add(prospectiveAdmin);
                     _context.SaveChanges();
                 }
+
+                if (checkboxStateDictionary.Count > 0) 
+                {
+                    foreach (var pair in checkboxStateDictionary) 
+                    {
+                        if (pair.Value == true) 
+                        {
+                            OrganizationAdmin prospectiveAdmin = new OrganizationAdmin();
+                            prospectiveAdmin.OrganizationID = Int32.Parse(pair.Key);
+                            prospectiveAdmin.UserID = user.UserId;
+                            prospectiveAdmin.AuthorizationDate = null;
+                            prospectiveAdmin.DeauthorizationDate = null;
+                            _context.OrganizationAdmin.Add(prospectiveAdmin);
+                            _context.SaveChanges();
+                        }
+                    }
+                }
+                
             }
             else
             {

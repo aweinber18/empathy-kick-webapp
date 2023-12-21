@@ -1,8 +1,9 @@
 ﻿
 
 @{
+
     ViewData["Title"] = "Register";
-    
+    var orgs = ViewBag.Organizations as EmpathyKick.Models.Organization[];
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -120,7 +121,39 @@
                 <div class="col-md-6">
                     <input type="checkbox" name="isAdmin" />
                     <label>Empathy Admin</label>
-                </div>
+                    <br />
+                        <input type="checkbox" id="myCheckbox"> Organization Admin
+                    </div>
+                    <!-- The Modal -->
+                    <div class="modal" id="myModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Choose an Organization</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+
+                                <!-- Modal Body -->
+                                <div class="modal-body">
+                                    @for(int i=0;i< orgs.Length;i++)
+                                    {
+                                        <input type="checkbox" id="@orgs[i].OrganizationId">
+                                        <label>@orgs[i].OrganizationName</label>
+                                        <br />
+                                    }
+                                </div>
+
+                                <!-- Modal Footer -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="checkboxState" name="checkboxState" />
                 <div class="col-md-6">
                     <input type="submit" value="Register" class="btn btn-primary" id="submitBtn" disabled />
                 </div>
@@ -155,6 +188,29 @@
 
     <script>
         $(document).ready(function () {
+            var handleCheckboxChange = true; // Flag to enable/disable checkbox change event
+            var checkboxState = {};
+            // Attach change event to the checkbox
+            $("#myCheckbox").change(function () {
+                // Check if the change event should be handled
+                if (handleCheckboxChange) {
+                    // If the checkbox is checked, open the modal
+                    if ($(this).is(":checked")) {
+                        $("#myModal").modal("show");
+                    } else {
+                        // If the checkbox is unchecked, close the modal
+                        $("#myModal").modal("hide");
+                    }
+                }
+            });
+            $("#myModal").on('click', '[data-dismiss="modal"]', function () {
+                // Disable checkbox change event handling
+                handleCheckboxChange = false;
+
+                // Manually hide the modal
+                $("#myModal").modal("hide");
+                saveCheckboxState();
+            });
             var message = @Html.Raw(Json.Serialize(ViewBag.Message));
             if (message == null) {
                 // Trigger form submission to initiate validation
@@ -188,6 +244,9 @@
                 }
 
                 $('form input').each(function () {
+                    if ($(this).attr('type') === 'checkbox' || $(this).attr('type') === 'hidden') {
+                        return true; // Continue the loop for checkboxes
+                    }
                     if ($(this).val() === '') {
                         isValid = false;
                         return false; // break out of the each loop
@@ -199,6 +258,22 @@
 
                 $('#submitBtn').prop('disabled', !isValid);
             }
+
+            $("#myModal input[type='checkbox']").change(function () {
+                // Update the state of the checkbox
+                var checkboxId = $(this).attr("id");
+                console.log(checkboxId);
+                checkboxState[checkboxId] = $(this).is(":checked");
+            });
+
+            // Function to save the state of each checkbox
+            function saveCheckboxState() {
+                $("#checkboxState").val(JSON.stringify(checkboxState))
+                console.log("Checkbox state:", checkboxState);
+
+                // You can now use 'checkboxState' to determine which checkboxes were checked
+            }
+
         });
     </script>
 }
