@@ -166,6 +166,19 @@ namespace EmpathyKick.Controllers
                     {
                         HttpContext.Session.SetString("EmpathyAdmin", "False");
                     }
+                    OrganizationAdmin[] orgsAdminOf = _context.IsOrganizationAdmin(get_user.UserId);
+                    if (orgsAdminOf.Length > 0)
+                    {
+                        HttpContext.Session.SetString("OrganizationAdmin", "True");
+                        for (int i = 0; i < orgsAdminOf.Length;i++)
+                        {
+
+                        }
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("OrganizationAdmin", "False");
+                    }
                     return RedirectToAction("Index");
                 }
                 else
@@ -180,6 +193,7 @@ namespace EmpathyKick.Controllers
         public ActionResult LogOut()
         {
             HttpContext.Session.SetString("EmpathyAdmin", "");
+            HttpContext.Session.SetString("OrganizationAdmin", "");
             HttpContext.Session.SetString("UserId", "");
             HttpContext.Session.SetString("Username", "");
             HttpContext.Session.SetString("RedirectFromLogin", "False");
