@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Net;
 using EmpathyKick.Data;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace EmpathyKick.Controllers
 {
@@ -170,14 +171,17 @@ namespace EmpathyKick.Controllers
                     if (orgsAdminOf.Length > 0)
                     {
                         HttpContext.Session.SetString("OrganizationAdmin", "True");
-                        for (int i = 0; i < orgsAdminOf.Length;i++)
+                        string IdsOfOrgsAdminOf = "";
+                        for (int i = 0; i < orgsAdminOf.Length; i++)
                         {
-
+                            IdsOfOrgsAdminOf += orgsAdminOf[i].OrganizationID.ToString() + "$";
                         }
+                        HttpContext.Session.SetString("IDsOfOrganizationsThatAdminOf", IdsOfOrgsAdminOf);
                     }
                     else
                     {
                         HttpContext.Session.SetString("OrganizationAdmin", "False");
+                        HttpContext.Session.SetString("IDsOfOrganizationsThatAdminOf", "");
                     }
                     return RedirectToAction("Index");
                 }
@@ -194,6 +198,7 @@ namespace EmpathyKick.Controllers
         {
             HttpContext.Session.SetString("EmpathyAdmin", "");
             HttpContext.Session.SetString("OrganizationAdmin", "");
+            HttpContext.Session.SetString("IDsOfOrganizationsThatAdminOf", "");
             HttpContext.Session.SetString("UserId", "");
             HttpContext.Session.SetString("Username", "");
             HttpContext.Session.SetString("RedirectFromLogin", "False");
