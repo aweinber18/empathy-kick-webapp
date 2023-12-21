@@ -187,10 +187,10 @@ namespace EmpathyKick.Models
                     sql.Append(", ");
             }
             sql.Append(" FROM ");
-            sql.Append(tables.ToList<string>()[0]);
+            sql.Append("[" + tables.ToList<string>()[0] + "]");
             if (tables.Count > 1)
             {
-                sql.Append(" a JOIN" + tables.ToList<string>()[1] + " b ON a." + joinerColumn + " = " + " b." + joinerColumn);
+                sql.Append(" a JOIN '" + tables.ToList<string>()[1] + "' b ON a." + joinerColumn + " = " + " b." + joinerColumn);
             }
 
             if (wherePredicates.Count > 0)

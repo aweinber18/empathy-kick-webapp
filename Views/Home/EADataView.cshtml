@@ -2,30 +2,42 @@
 @using System.Data;
 @{
     SqlDataReader data = Model;
-
+    
 }
+<body>
 
-<table>
-    <thead>
-        <tr>
-            @for (int i = 0; i < data.FieldCount; i++)
-            {
-                <th>@data.GetName(i)</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @while (data.Read())
-        {
-            <tr>
-                @for (int i = 0; i < data.FieldCount; i++)
+    <h2>Data Table</h2>
+
+    @if (data.Read())
+    {
+        <table border="1">
+            <thead>
+                <tr>
+                    @for (var i=0; i < data.FieldCount; i++)
+                    {
+                        <th>@data.GetName(i);</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @while (data.Read())
                 {
-                    <td>@data[i]</td>
+                <tr>
+                    @for (var i=0; i < data.FieldCount; i++)
+                    {
+                        <td>@data.GetString(i)</td>
+                    }
+                </tr>
                 }
-            </tr>
-        }
-    </tbody>
-</table>
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No data available.</p>
+    }
+
+</body>
 
 <style>
     table {
