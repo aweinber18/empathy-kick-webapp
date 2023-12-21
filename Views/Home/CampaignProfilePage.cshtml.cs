@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EmpathyKick.Views.Home
 {
-    public class ProfilePageModel : PageModel
+    public class CampaignProfilePageModel : PageModel
     {
         public void OnGet()
         {

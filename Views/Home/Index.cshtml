@@ -42,7 +42,7 @@
                         @for (int j = 0; j < 3 && i + j < arr.Length; j++)
                         {                          
                             <div class="card">
-                                <a asp-action="ProfilePage" asp-route-organizationName="@arr[i + j].OrganizationName">
+                                <a asp-action="CampaignProfilePage" asp-route-organizationName="@arr[i + j].OrganizationName">
                                 <div class="card-body">
                                     <img src="~/LogoFiles/@arr[i + j].LogoFile" class="img-fluid" alt="Organization Logo">
                                     <h5 class="card-title">@arr[i + j].OrganizationName</h5>
@@ -82,7 +82,7 @@
                             {
 
                                 <div class="card">
-                                    <a asp-action="ProfilePage" asp-route-organizationName="@reccomendedOrganizations[i + j].OrganizationName">
+                                    <a asp-action="CampaignProfilePage" asp-route-organizationName="@reccomendedOrganizations[i + j].OrganizationName">
                                         <div class="card-body">
                                             <img src="~/LogoFiles/@reccomendedOrganizations[i + j].LogoFile" class="img-fluid" alt="Organization Logo">
                                             <h5 class="card-title">@reccomendedOrganizations[i + j].OrganizationName</h5>

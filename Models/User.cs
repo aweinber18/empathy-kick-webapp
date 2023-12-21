@@ -37,7 +37,7 @@ namespace EmpathyKick.Models
         public string? ThemeColor { get; set; }
 
         [ForeignKey("AddressID")]
-        public Addresses Address { get; set; }
+        public Addresses? Address { get; set; }
 
     }
 }
