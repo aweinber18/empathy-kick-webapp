@@ -12,6 +12,7 @@
             info[i].Item2 = null;
         }
     }
+    bool noneToShowYou = true;
 }
 <h2>@ViewData["Title"]</h2>
 <h4>Each row has a user and the Organization they are applying to be Admin of</h4>
@@ -36,6 +37,7 @@
                 {
                     continue;   
                 }
+                noneToShowYou = false;
                 <tr>
                     <td>@info[i].Item1.UserID</td>
                     <td>@info[i].Item1.Username</td>
@@ -53,7 +55,11 @@
 }
 else
 {
-    <p>No pending empathy admins.</p>
+    <p>No pending Organization admins.</p>
+}
+@if(noneToShowYou)
+{
+    <p>No pending admins for the Organizations you are part of.</p>
 }
 <style>
     #banner {
