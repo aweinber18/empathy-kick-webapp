@@ -7,7 +7,7 @@ namespace EmpathyKick.Models
     public class User
     {
         [System.ComponentModel.DataAnnotations.Key]
-        public int UserId { get; set; }
+        public int UserID { get; set; }
 
         [Required(ErrorMessage = "Username is required")]
         public string Username { get; set; }

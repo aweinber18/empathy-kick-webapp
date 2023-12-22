@@ -1,0 +1,70 @@
+﻿@using EmpathyKick.Data
+@using EmpathyKick.Models
+@{
+    ViewData["Title"] = "Pending Organization Admins";
+    (User, Organization)[] info = Model;
+
+}
+<h2>@ViewData["Title"]</h2>
+<h4>Each row has a user and the Organization they are applying to be Admin of</h4>
+@if (info != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>UserId</th>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>OrganizationID</th>
+                <th>OrganizationName</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i=0;i<info.Length;i++)
+            {
+                <tr>
+                    <td>@info[i].Item1.UserID</td>
+                    <td>@info[i].Item1.Username</td>
+                    <td>@info[i].Item1.FirstName</td>
+                    <td>@info[i].Item1.LastName</td>
+                    <td>@info[i].Item2.OrganizationId</td>
+                    <td>@info[i].Item2.OrganizationName</td>
+                    <td>
+                        <button id="approveButton_@info[i].Item1.UserID" class="btn btn-primary" onclick="approveUser(@info[i].Item1.UserID,@info[i].Item2.OrganizationId)">Approve</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No pending empathy admins.</p>
+}
+<style>
+    #banner {
+        margin-top: 10px;
+        padding: 10px;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        function approveUser(userId,orgId) {
+            $.ajax({
+                url: '/Home/ApproveOrganizationAdmin',
+                method: 'POST',
+                data: { userId: userId, orgId: orgId },
+                success: function (data) {
+                    location.reload();
+
+                },
+                error: function (error) {
+                    console.error('Error updating user:', error);
+                }
+            });
+        }
+    </script>
+}
