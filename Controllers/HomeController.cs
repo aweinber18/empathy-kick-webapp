@@ -87,11 +87,7 @@ namespace EmpathyKick.Controllers
         [HttpPost]
         public IActionResult Register(User user, Addresses address,string checkboxState)
         {
-            var checkboxStateDictionary = new Dictionary<string, bool>();
-            if (!string.IsNullOrEmpty(checkboxState))
-            {
-                checkboxStateDictionary = JsonConvert.DeserializeObject<Dictionary<string, bool>>(checkboxState);
-            }
+            var checkboxStateDictionary = JsonConvert.DeserializeObject<Dictionary<string, bool>>(checkboxState);
 
             var get_user = _context.User.FirstOrDefault(p => p.Username == user.Username);
             if (get_user == null)
