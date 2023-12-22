@@ -251,9 +251,9 @@ namespace EmpathyKick.Controllers
         }
 
         [HttpPost]
-        public IActionResult ApproveOrganizationAdmin(int userId)
+        public IActionResult ApproveOrganizationAdmin(int userId, int orgId)
         {
-            EmpathyAdmin[] admin = _context.EmpathyAdmin.Where(admin => admin.UserID == userId).Distinct().ToArray();
+            OrganizationAdmin[] admin = _context.OrganizationAdmin.Where(admin => admin.UserID == userId && admin.OrganizationID == orgId).Distinct().ToArray();
             admin[0].AuthorizationDate = DateTime.Now;
             _context.SaveChanges();
             return RedirectToAction("PendingEAView");
