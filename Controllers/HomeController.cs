@@ -246,13 +246,7 @@ namespace EmpathyKick.Controllers
                 where user != null && org != null
                 select (User: user, Organization: org)
                 ).ToArray();
-
-
-            // Perform an inner join based on the associations
-            //var result = from assoc in associations
-            //             join user in users on assoc.UserID equals user.UserID
-            //             join org in organizations on assoc.OrganizationID equals org.OrganizationId
-            //             select new { User = user, Organization = org }; 
+            
             return View("PendingOAView",result);
         }
 
