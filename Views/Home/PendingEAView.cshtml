@@ -29,12 +29,12 @@
             @foreach (var user in UsersRequestingEAship)
             {
                 <tr>
-                    <td>@user.UserID</td>
+                    <td>@user.UserId</td>
                     <td>@user.Username</td>
                     <td>@user.FirstName</td>
                     <td>@user.LastName</td>
                     <td>
-                        <button id="approveButton_@user.UserID" class="btn btn-primary" onclick="approveUser(@user.UserID)">Approve</button>
+                        <button id="approveButton_@user.UserId" class="btn btn-primary" onclick="approveUser(@user.UserId)">Approve</button>
                     </td>
                 </tr>
             }
@@ -65,7 +65,7 @@ else
         }
         function approveUser(userId) {
             $.ajax({
-                url: '/Home/ApproveEmpathyAdmin',
+                url: '/Home/ApproveUser',
                 method: 'POST', 
                 data: { userId: userId }, 
                 success: function (data) {

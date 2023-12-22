@@ -27,13 +27,5 @@
 
         }
 
-        public static OrganizationAdmin[] IsOrganizationAdmin(this MyDBContext context, int id)
-        {
-            var isOrgAdmin = context.OrganizationAdmin.Where(admin => admin.UserID == id)
-                .Where(admin => admin.AuthorizationDate != null)
-                .Where(admin => admin.DeauthorizationDate == null).ToArray();
-            return isOrgAdmin;
-        }
-
     }
 }

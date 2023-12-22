@@ -40,12 +40,6 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PendingEAView">Pending EAs</a>
                         </li>
                         }
-                        @if (Context.Session.GetString("OrganizationAdmin") == "True")
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PendingOAView">Pending OAs</a>
-                            </li>
-                        }
                     </ul>
 
                     @if (@Context.Session.GetString("Username") == null || @Context.Session.GetString("Username") == "")
