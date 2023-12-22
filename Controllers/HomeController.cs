@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Net;
 using EmpathyKick.Data;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace EmpathyKick.Controllers
 {
@@ -102,7 +103,7 @@ namespace EmpathyKick.Controllers
                 if (isAdmin) 
                 {
                     EmpathyAdmin prospectiveAdmin = new EmpathyAdmin();
-                    prospectiveAdmin.UserID = user.UserId;
+                    prospectiveAdmin.UserID = user.UserID;
                     prospectiveAdmin.AuthorizationDate = null;
                     prospectiveAdmin.DeauthorizationDate = null;
                     _context.EmpathyAdmin.Add(prospectiveAdmin);
@@ -117,7 +118,7 @@ namespace EmpathyKick.Controllers
                         {
                             OrganizationAdmin prospectiveAdmin = new OrganizationAdmin();
                             prospectiveAdmin.OrganizationID = Int32.Parse(pair.Key);
-                            prospectiveAdmin.UserID = user.UserId;
+                            prospectiveAdmin.UserID = user.UserID;
                             prospectiveAdmin.AuthorizationDate = null;
                             prospectiveAdmin.DeauthorizationDate = null;
                             _context.OrganizationAdmin.Add(prospectiveAdmin);
@@ -155,16 +156,32 @@ namespace EmpathyKick.Controllers
                 && p.Password == user.Password);
                 if (get_user != null)
                 {
-                    HttpContext.Session.SetString("UserId", get_user.UserId.ToString());
+                    HttpContext.Session.SetString("UserId", get_user.UserID.ToString());
                     HttpContext.Session.SetString("Username", get_user.Username.ToString());
                     HttpContext.Session.SetString("RedirectFromLogin", "True");
-                    if (_context.IsEmpathyAdmin(get_user.UserId))
+                    if (_context.IsEmpathyAdmin(get_user.UserID))
                     {
                         HttpContext.Session.SetString("EmpathyAdmin", "True");
                     }
                     else
                     {
                         HttpContext.Session.SetString("EmpathyAdmin", "False");
+                    }
+                    OrganizationAdmin[] orgsAdminOf = _context.IsOrganizationAdmin(get_user.UserID);
+                    if (orgsAdminOf.Length > 0)
+                    {
+                        HttpContext.Session.SetString("OrganizationAdmin", "True");
+                        string IdsOfOrgsAdminOf = "";
+                        for (int i = 0; i < orgsAdminOf.Length; i++)
+                        {
+                            IdsOfOrgsAdminOf += orgsAdminOf[i].OrganizationID.ToString() + "$";
+                        }
+                        HttpContext.Session.SetString("IDsOfOrganizationsThatAdminOf", IdsOfOrgsAdminOf);
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("OrganizationAdmin", "False");
+                        HttpContext.Session.SetString("IDsOfOrganizationsThatAdminOf", "");
                     }
                     return RedirectToAction("Index");
                 }
@@ -180,6 +197,8 @@ namespace EmpathyKick.Controllers
         public ActionResult LogOut()
         {
             HttpContext.Session.SetString("EmpathyAdmin", "");
+            HttpContext.Session.SetString("OrganizationAdmin", "");
+            HttpContext.Session.SetString("IDsOfOrganizationsThatAdminOf", "");
             HttpContext.Session.SetString("UserId", "");
             HttpContext.Session.SetString("Username", "");
             HttpContext.Session.SetString("RedirectFromLogin", "False");
@@ -189,16 +208,52 @@ namespace EmpathyKick.Controllers
         public IActionResult PendingEAView()
         {
             var pendingIDs = _context.EmpathyAdmin.Where(admin => admin.AuthorizationDate == null).Select(admin => admin.UserID).ToList();
-            User[] UsersRequestingEAship = _context.User.Where(user => pendingIDs.Contains(user.UserId)).ToArray();
+            User[] UsersRequestingEAship = _context.User.Where(user => pendingIDs.Contains(user.UserID)).ToArray();
             EmpathyAdmin[] pendingAdmins = _context.EmpathyAdmin.Where(admin => admin.AuthorizationDate == null).ToArray();
             Tuple<User[], EmpathyAdmin[]> tuple = new Tuple<User[], EmpathyAdmin[]>(UsersRequestingEAship, pendingAdmins);
             return View("PendingEAView", tuple);
         }
 
         [HttpPost]
-        public IActionResult ApproveUser(int userId)
+        public IActionResult ApproveEmpathyAdmin(int userId)
         {
             EmpathyAdmin[] admin = _context.EmpathyAdmin.Where(admin => admin.UserID == userId).Distinct().ToArray();
+            admin[0].AuthorizationDate = DateTime.Now;
+            _context.SaveChanges();
+            return RedirectToAction("PendingEAView");
+        }
+
+        public IActionResult PendingOAView()
+        {
+            var pendingIDs = _context.OrganizationAdmin
+             .Where(admin => admin.AuthorizationDate == null)
+            .Select(admin => new { admin.UserID, admin.OrganizationID })
+            .ToList();
+
+            // Retrieve users and organizations based on the lists
+            var users = _context.User.ToList();  // Fetch all users
+            var organizations = _context.Organization.ToList();  // Fetch all organizations
+            var associations = _context.OrganizationAdmin.ToList();
+            // Retrieve associations between users and organizations
+            var associations2 = associations
+                .Where(assoc => pendingIDs.Any(p => p.UserID == assoc.UserID && p.OrganizationID == assoc.OrganizationID))
+                .ToList();
+
+            // Perform an inner join based on the associations
+            var result = (from assoc in associations2
+                join user in users on assoc?.UserID equals user?.UserID
+                join org in organizations on assoc?.OrganizationID equals org?.OrganizationId
+                where user != null && org != null
+                select (User: user, Organization: org)
+                ).ToArray();
+            
+            return View("PendingOAView",result);
+        }
+
+        [HttpPost]
+        public IActionResult ApproveOrganizationAdmin(int userId, int orgId)
+        {
+            OrganizationAdmin[] admin = _context.OrganizationAdmin.Where(admin => admin.UserID == userId && admin.OrganizationID == orgId).Distinct().ToArray();
             admin[0].AuthorizationDate = DateTime.Now;
             _context.SaveChanges();
             return RedirectToAction("PendingEAView");
