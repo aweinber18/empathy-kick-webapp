@@ -68,33 +68,36 @@
             </div>
             @if(UserloggedIn != null && UserloggedIn != "")
             {
-                <div class="container mt-5">
-                <h4><b>Recommended Campaigns</b></h4>
-                <div id="recommendedCarousel" class="carousel slide" data-ride="carousel">
-                 <div class="carousel-inner">
+    
+        <div class="container mt-5">
+            <h4><b>Recommended Campaigns</b></h4>
+        @if (@reccomendedOrganizations.Length > 0)
+        {
+            <div id="recommendedCarousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
 
-               
-                @for (int i= 0;i < reccomendedOrganizations.Length; i +=3)
-                 {
-                    <div class="carousel-item @(i == 0 ? "active" : "")">
-                        <div class="card-deck">
-                            @for (int j = 0; j < 3 && i + j < reccomendedOrganizations.Length; j++)
-                            {
 
-                                <div class="card">
-                                    <a asp-action="CampaignProfilePage" asp-route-organizationName="@reccomendedOrganizations[i + j].OrganizationName">
-                                        <div class="card-body">
-                                            <img src="~/LogoFiles/@reccomendedOrganizations[i + j].LogoFile" class="img-fluid" alt="Organization Logo">
-                                            <h5 class="card-title">@reccomendedOrganizations[i + j].OrganizationName</h5>
-                                            <p class="card-text">ID: @reccomendedOrganizations[i + j].OrganizationId</p>
-                                        </div>
-                                    </a>
-                                </div>
-                            }
+                    @for (int i = 0; i < reccomendedOrganizations.Length; i += 3)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <div class="card-deck">
+                                @for (int j = 0; j < 3 && i + j < reccomendedOrganizations.Length; j++)
+                                {
+
+                                    <div class="card">
+                                        <a asp-action="CampaignProfilePage" asp-route-organizationName="@reccomendedOrganizations[i + j].OrganizationName">
+                                            <div class="card-body">
+                                                <img src="~/LogoFiles/@reccomendedOrganizations[i + j].LogoFile" class="img-fluid" alt="Organization Logo">
+                                                <h5 class="card-title">@reccomendedOrganizations[i + j].OrganizationName</h5>
+                                                <p class="card-text">ID: @reccomendedOrganizations[i + j].OrganizationId</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            </div>
                         </div>
-                    </div>
-                 }
-            </div>
+                    }
+                </div>
             <a class="carousel-control-prev" href="#recommendedCarousel" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
@@ -104,8 +107,15 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
-        </div>
-            }
+        
+    } else
+    {
+            <div style="text-align: center;">
+                <p style="font-size: 24px; font-weight: bold;">There are no recommended campaigns, go donate!</p>
+            </div>
+    }
+    </div>
+}
 
 
         <style>
