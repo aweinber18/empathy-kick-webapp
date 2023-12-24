@@ -88,8 +88,7 @@ namespace EmpathyKick.Controllers
         [HttpPost]
         public IActionResult Register(User user, Addresses address, string checkboxState)
         {
-            var checkboxStateDictionary = JsonConvert.DeserializeObject<Dictionary<string, bool>>(checkboxState);
-
+           
             var get_user = _context.User.FirstOrDefault(p => p.Username == user.Username);
             if (get_user == null)
             {
@@ -109,26 +108,30 @@ namespace EmpathyKick.Controllers
                     _context.EmpathyAdmin.Add(prospectiveAdmin);
                     _context.SaveChanges();
                 }
-
-                if (checkboxStateDictionary.Count > 0)
+                if (checkboxState != null)
                 {
-                    foreach (var pair in checkboxStateDictionary)
+                    var checkboxStateDictionary = JsonConvert.DeserializeObject<Dictionary<string, bool>>(checkboxState);
+
+                    if (checkboxStateDictionary.Count > 0)
                     {
-                        if (pair.Value == true)
+                        foreach (var pair in checkboxStateDictionary)
                         {
-                            OrganizationAdmin prospectiveAdmin = new OrganizationAdmin();
-                            prospectiveAdmin.OrganizationID = Int32.Parse(pair.Key);
-                            prospectiveAdmin.UserID = user.UserID;
-                            prospectiveAdmin.AuthorizationDate = null;
-                            prospectiveAdmin.DeauthorizationDate = null;
-                            _context.OrganizationAdmin.Add(prospectiveAdmin);
-                            _context.SaveChanges();
+                            if (pair.Value == true)
+                            {
+                                OrganizationAdmin prospectiveAdmin = new OrganizationAdmin();
+                                prospectiveAdmin.OrganizationID = Int32.Parse(pair.Key);
+                                prospectiveAdmin.UserID = user.UserID;
+                                prospectiveAdmin.AuthorizationDate = null;
+                                prospectiveAdmin.DeauthorizationDate = null;
+                                _context.OrganizationAdmin.Add(prospectiveAdmin);
+                                _context.SaveChanges();
+                            }
                         }
                     }
                 }
 
-            }
-            else
+                }
+                else
             {
                 ViewBag.Message = "Username '" + user.Username + "' already exists ";
                 return View();
@@ -261,7 +264,7 @@ namespace EmpathyKick.Controllers
 
         public ActionResult UserProfilePage()
         {
-            User theUser = _context.User.Where(user => user.UserID == Int32.Parse(HttpContext.Session.GetString("UserId"))).Single();
+            User theUser = _context.User.Include(u => u.Address).Where(user => user.UserID == Int32.Parse(HttpContext.Session.GetString("UserId"))).Single();
             return View(theUser);
         }
 
