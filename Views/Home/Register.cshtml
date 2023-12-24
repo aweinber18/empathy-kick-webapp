@@ -113,6 +113,13 @@
                 @Html.ValidationMessageFor(model => model.Address.Country)
             </div>
         </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ThemeColor, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <input type="color" class="form-control" id="ThemeColor" name="ThemeColor" required>
+                            @Html.ValidationMessageFor(model => model.ThemeColor)
+                        </div>
+                    </div>
        </div>
         </div>
       
@@ -163,7 +170,7 @@
     </div>
     <style>
         #submitBtn:disabled {
-            background-color: #dddddd; /* Change this to the desired grey color */
+            background-color: #dddddd; 
         }
 
         #ViewBagData {
@@ -173,7 +180,7 @@
             padding: 10px;
             margin: 10px;
             border: 2px solid red;
-            box-shadow: 2px 2px 5px grey; /* Adjust as needed */
+            box-shadow: 2px 2px 5px grey; 
         }
 
     </style>

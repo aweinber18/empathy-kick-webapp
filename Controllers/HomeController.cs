@@ -77,7 +77,7 @@ namespace EmpathyKick.Controllers
         }
 
 
-     
+
         public ActionResult Register()
         {
             var orgs = _context.Organization.ToArray();
@@ -86,10 +86,9 @@ namespace EmpathyKick.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(User user, Addresses address,string checkboxState)
+        public IActionResult Register(User user, Addresses address, string checkboxState)
         {
-            var checkboxStateDictionary = JsonConvert.DeserializeObject<Dictionary<string, bool>>(checkboxState);
-
+           
             var get_user = _context.User.FirstOrDefault(p => p.Username == user.Username);
             if (get_user == null)
             {
@@ -100,7 +99,7 @@ namespace EmpathyKick.Controllers
                 _context.User.Add(user);
                 _context.SaveChanges();
                 bool isAdmin = (Request.Form["isEmpathyAdmin"] == "on");
-                if (isAdmin) 
+                if (isAdmin)
                 {
                     EmpathyAdmin prospectiveAdmin = new EmpathyAdmin();
                     prospectiveAdmin.UserID = user.UserID;
@@ -109,37 +108,41 @@ namespace EmpathyKick.Controllers
                     _context.EmpathyAdmin.Add(prospectiveAdmin);
                     _context.SaveChanges();
                 }
-
-                if (checkboxStateDictionary.Count > 0) 
+                if (checkboxState != null)
                 {
-                    foreach (var pair in checkboxStateDictionary) 
+                    var checkboxStateDictionary = JsonConvert.DeserializeObject<Dictionary<string, bool>>(checkboxState);
+
+                    if (checkboxStateDictionary.Count > 0)
                     {
-                        if (pair.Value == true) 
+                        foreach (var pair in checkboxStateDictionary)
                         {
-                            OrganizationAdmin prospectiveAdmin = new OrganizationAdmin();
-                            prospectiveAdmin.OrganizationID = Int32.Parse(pair.Key);
-                            prospectiveAdmin.UserID = user.UserID;
-                            prospectiveAdmin.AuthorizationDate = null;
-                            prospectiveAdmin.DeauthorizationDate = null;
-                            _context.OrganizationAdmin.Add(prospectiveAdmin);
-                            _context.SaveChanges();
+                            if (pair.Value == true)
+                            {
+                                OrganizationAdmin prospectiveAdmin = new OrganizationAdmin();
+                                prospectiveAdmin.OrganizationID = Int32.Parse(pair.Key);
+                                prospectiveAdmin.UserID = user.UserID;
+                                prospectiveAdmin.AuthorizationDate = null;
+                                prospectiveAdmin.DeauthorizationDate = null;
+                                _context.OrganizationAdmin.Add(prospectiveAdmin);
+                                _context.SaveChanges();
+                            }
                         }
                     }
                 }
-                
-            }
-            else
+
+                }
+                else
             {
-                ViewBag.Message = "Username '" + user.Username +"' already exists ";
+                ViewBag.Message = "Username '" + user.Username + "' already exists ";
                 return View();
             }
-        
-        ModelState.Clear();
-        
-		var newUser = "Successfully Registered " + user.Username;
-        HttpContext.Session.SetString("NewUser",newUser);
-        return RedirectToAction("Login");
-       }
+
+            ModelState.Clear();
+
+            var newUser = "Successfully Registered " + user.Username;
+            HttpContext.Session.SetString("NewUser", newUser);
+            return RedirectToAction("Login");
+        }
         public ActionResult Login()
         {
 
@@ -241,13 +244,13 @@ namespace EmpathyKick.Controllers
 
             // Perform an inner join based on the associations
             var result = (from assoc in associations2
-                join user in users on assoc?.UserID equals user?.UserID
-                join org in organizations on assoc?.OrganizationID equals org?.OrganizationId
-                where user != null && org != null
-                select (User: user, Organization: org)
+                          join user in users on assoc?.UserID equals user?.UserID
+                          join org in organizations on assoc?.OrganizationID equals org?.OrganizationId
+                          where user != null && org != null
+                          select (User: user, Organization: org)
                 ).ToArray();
-            
-            return View("PendingOAView",result);
+
+            return View("PendingOAView", result);
         }
 
         [HttpPost]
@@ -258,7 +261,57 @@ namespace EmpathyKick.Controllers
             _context.SaveChanges();
             return RedirectToAction("PendingEAView");
         }
-        public IActionResult EATableSelectionView()
+
+        public ActionResult UserProfilePage()
+        {
+            User theUser = _context.User.Include(u => u.Address).Where(user => user.UserID == Int32.Parse(HttpContext.Session.GetString("UserId"))).Single();
+            return View(theUser);
+        }
+
+        [HttpPost] 
+        public ActionResult UpdateUser(User updatedUser)
+        {
+            User notUpdated = _context.User.Find(updatedUser.UserID);
+            if (notUpdated != null) 
+            {
+                notUpdated.Username = updatedUser.Username;
+                notUpdated.Password = updatedUser.Password;
+                notUpdated.FirstName = updatedUser.FirstName;
+                notUpdated.LastName = updatedUser.LastName;
+                notUpdated.Phone = updatedUser.Phone;
+                notUpdated.Email = updatedUser.Email;
+                notUpdated.ThemeColor = updatedUser.ThemeColor;
+
+                if(updatedUser.Address != null) 
+                {
+                    notUpdated.Address = updatedUser.Address;
+              
+                if(updatedUser.Address.Address !=  null)
+                {
+                    notUpdated.Address.Address = updatedUser.Address.Address;
+                }
+                if(updatedUser.Address.City != null)
+                {
+                    notUpdated.Address.City = updatedUser.Address.City;
+                }
+                if(updatedUser.Address.Region != null)
+                {
+                    notUpdated.Address.Region = updatedUser.Address.Region;
+                }
+                if(updatedUser.Address.Country != null)
+                {
+                    notUpdated.Address.Country = updatedUser.Address.Country;
+                }
+                  } else
+                {
+                    notUpdated.Address = null;
+                }
+                _context.SaveChanges();
+                return RedirectToAction("UserProfilePage");
+            }
+            return View(UpdateUser);
+        }
+            public IActionResult EATableSelectionView()
         {
           //pass in the context to the view so that we can access the database
             return View("EATableSelectionView",_context);
