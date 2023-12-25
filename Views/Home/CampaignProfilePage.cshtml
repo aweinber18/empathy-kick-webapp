@@ -1,7 +1,4 @@
-﻿@{
-	ViewData["Title"] = ViewData["OrganizationName"];
-	Organization myOrg = Model;
-}
+﻿
 
 <h1>@ViewData["Title"]</h1>
 
@@ -34,28 +31,33 @@
             // Your onComplete handler
         },
     }).render('#paypal-donate-button-container');
-
-    // Function to handle donation button click
+    </script>
+    <script>
     function handleDonate() {
         // Get the donation amount from the input field
         var donationAmount = document.getElementById('donationAmount').value;
 
         // Display a confirmation popup
         var isConfirmed = confirm('Are you sure you want to donate $' + donationAmount + '?');
-
-        // If the user confirms, provide a success confirmation
+        // If the user confirms, make an AJAX request to the server
         if (isConfirmed) {
-            // You can perform additional validation or processing here
-
-            // For simplicity, you can log the amount to the console
-            console.log('Donation Amount: $' + donationAmount);
-
-            // Add your logic to handle the donation success here, if needed
-            alert('Thank you for your donation of $' + donationAmount + '!');
-
+            $.ajax({
+          
+                type: "POST",
+                url: "/Home/HandleDonation", // Replace with your controller and action
+                data: {
+                    amount: donationAmount, org: Org },
+                success: function (response) {
+                    // Handle the server response here (if needed)
+                    alert('Donation successful!'); 
+                },
+                error: function () {
+                    alert('Error processing donation.'); 
+                }
+            });
         } else {
             // If the user cancels, provide a cancellation confirmation
             alert('Donation canceled. Your amount was not processed.');
         }
     }
-</script>
+   </script>

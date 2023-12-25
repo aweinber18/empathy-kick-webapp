@@ -75,7 +75,27 @@ namespace EmpathyKick.Controllers
 
             return View(myOrg);
         }
+        [HttpPost]
+        public JsonResult HandleDonation(string org, decimal amount)
+        {
+            Console.WriteLine("hello\n");
+            Console.ReadLine();
+            Console.WriteLine(org + "\n");
+            Console.WriteLine(amount);
 
+
+            if (String.IsNullOrEmpty(org) || amount <= 0)
+            {
+                return Json(new { success = false, message = "Invalid donation data." });
+            }
+
+            // Update total donations
+            
+
+            // You may want to save the updated totalDonations to a database
+
+            return Json(new { success = true, message = $"Thank you for your ${amount} donation to {org}!" });
+        }
 
 
         public ActionResult Register()
