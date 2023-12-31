@@ -1,0 +1,56 @@
+﻿@{
+    List<Addresses> addresses = Model;
+}
+
+<html>
+<head>
+    <title>Address List</title>
+</head>
+<body>
+    <h2>Address List</h2>
+
+    <table bgcolor="darkgrey" border="1">
+        <thead>
+            <tr>
+                <th>Address ID</th>
+                <th>Street Address</th>
+                <th>City</th>
+                <th>Region</th>
+                <th>Country</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var address in addresses)
+            {
+                <tr bgcolor="lightgrey">
+                    <td>@address.AddressId</td>
+                    <td>@address.Address</td>
+                    <td>@address.City</td>
+                    <td>@address.Region</td>
+                    <td>@address.Country</td>
+
+                    <td>
+                        <button class="btn btn-warning" asp-action="EAAddressEditView" name="@address.AddressId">Edit</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+    tbody > tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>

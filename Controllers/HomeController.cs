@@ -355,5 +355,46 @@ namespace EmpathyKick.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+
+        // EMPATHY ADMIN RESTRICTED VIEWS
+        public IActionResult EADataSelection() {
+            // List of data views for EA to choose from
+            return View(); 
+        }
+        public IActionResult EAUserView() 
+        { 
+            List<User> users = _context.User.ToList();
+            return View(users);
+        }
+        public IActionResult EAEAView() 
+        { 
+            return View(); 
+        }
+        public IActionResult EAOAView() 
+        { 
+            return View(); 
+        }
+        public IActionResult EAOrganizationView() 
+        {
+            List<Organization> organizations = _context.Organization.ToList();
+            return View(organizations); 
+        }
+        public IActionResult EADonationView()
+        { 
+            List<Donations> donations = _context.Donation.ToList();
+            return View(donations); 
+        }
+        public IActionResult EAAddressView()
+        {
+            List<Addresses> addresses = _context.Address.ToList();
+            return View(addresses); 
+        }
+        public IActionResult EACCView() 
+        { 
+            return View(); 
+        }
+
     }
 }

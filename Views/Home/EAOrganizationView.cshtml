@@ -1,0 +1,56 @@
+﻿@{
+    List<Organization> organizations = Model;
+}
+
+<html>
+<head>
+    <title>Organization List</title>
+</head>
+<body>
+    <h2>Organization List</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Organization ID</th>
+                <th>Organization Name</th>
+                <th>Tax ID</th>
+                <th>Logo File Path</th>
+                <th>Address ID</th>
+                <th>Theme Color</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var organization in organizations)
+            {
+                <tr>
+                    <td>@organization.OrganizationId</td>
+                    <td>@organization.OrganizationName</td>
+                    <td>@organization.TaxId</td>
+                    <td>@organization.LogoFile</td>
+                    <td>@organization.AddressId</td>
+                    <td>@organization.ThemeColor</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    tbody > tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>

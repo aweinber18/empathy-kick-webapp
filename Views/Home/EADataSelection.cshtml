@@ -1,0 +1,38 @@
+﻿
+@{
+    List<string> eaDataSelections = new List<string>
+            {
+                "Users",
+                "Empathy Admins",
+                "Organization Admins",
+                "Organizations",
+                "Donations",
+                "Addresses",
+                "Credit Cards"
+            };
+    List<string> aspActions = new List<string>
+            {  
+                "EAUserView",
+                "EAEAView",
+                "EAOAView",
+                "EAOrganizationView",
+                "EADonationView",
+                "EAAddressView",
+                "EACCView"
+            };
+}
+<html>
+<head>
+    <title>Data Selection</title>
+</head>
+<body>
+    <h2>Please Choose One of the Following Data Views:</h2><br />
+        @for (int i=0; i<eaDataSelections.Count; i++)
+        {
+            <form method="post" asp-action="@aspActions[i]" asp-controller="home">
+                <button class="btn btn-primary btn-lg rounded" type="submit" name="@eaDataSelections[i]" value="@eaDataSelections[i]">@eaDataSelections[i]</button>
+            </form>
+            <br />
+        }
+</body>
+</html>
