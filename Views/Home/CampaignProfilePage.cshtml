@@ -12,13 +12,39 @@
 <h3>Amount Raised: @ViewData["amountDonated"]</h3>
 
 <!-- Donation Form -->
-<form id="donationForm">
+<<form id="donationForm">
     <label for="donationAmount">Enter Donation Amount: $</label>
     <input type="number" id="donationAmount" name="donationAmount" step="0.01" required>
 
-    <button type="button" onclick="handleDonate()" style="background-color: red; color: blue; font-weight: bold;">DONATE NOW</button>
+    <button type="button" class="round-button" id="donate-button">Donate Now!</button>
 </form>
-
+<script>
+    document.getElementById('donate-button').addEventListener('click', function () {
+        var donationAmount = parseFloat(document.getElementById('donationAmount').value);
+       
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Donate", "Home")',
+            data: { donationAmount: donationAmount,
+                   organization: myOrg
+            },
+            success: function (data) {
+                if (data.success) {
+                    // Update the UI with the new total donation amount
+                    alert('Donation successful!');
+                    // Optionally update the UI with the new total donation amount
+             
+             ViewData["amountDonated"] = ViewData["amountDonated"] + donationAmount;
+         } else {
+                    alert('Donation failed. Please try again.');
+                }
+            },
+            error: function (error) {
+                console.error('Error donating', error);
+            }
+        });
+    });
+</script>
 <div id="paypal-donate-button-container"></div>
 
 <script>
@@ -35,27 +61,5 @@
         },
     }).render('#paypal-donate-button-container');
 
-    // Function to handle donation button click
-    function handleDonate() {
-        // Get the donation amount from the input field
-        var donationAmount = document.getElementById('donationAmount').value;
-
-        // Display a confirmation popup
-        var isConfirmed = confirm('Are you sure you want to donate $' + donationAmount + '?');
-
-        // If the user confirms, provide a success confirmation
-        if (isConfirmed) {
-            // You can perform additional validation or processing here
-
-            // For simplicity, you can log the amount to the console
-            console.log('Donation Amount: $' + donationAmount);
-
-            // Add your logic to handle the donation success here, if needed
-            alert('Thank you for your donation of $' + donationAmount + '!');
-
-        } else {
-            // If the user cancels, provide a cancellation confirmation
-            alert('Donation canceled. Your amount was not processed.');
-        }
-    }
+   
 </script>

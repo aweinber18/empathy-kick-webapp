@@ -316,6 +316,29 @@ namespace EmpathyKick.Controllers
           //pass in the context to the view so that we can access the database
             return View("EATableSelectionView",_context);
         }
+        [HttpPost]
+        public IActionResult Donate(double donationAmount, Organization organization)
+        {
+            try
+            {
+                // Update the database - Replace this with your logic
+                var organization = _context.Organization.FirstOrDefault(); // Replace with your query
+                if (organization != null)
+                {
+                    organization.TotalDonations += donationAmount;
+                    _context.SaveChanges();
+                    return Json(new { success = true, newTotalDonations = organization.TotalDonations });
+                }
+                else
+                {
+                    return Json(new { success = false });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
 
         public IActionResult EAColumnSelectionView()
         {
@@ -356,4 +379,5 @@ namespace EmpathyKick.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
+
 }
