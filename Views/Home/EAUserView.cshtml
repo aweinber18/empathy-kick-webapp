@@ -1,0 +1,75 @@
+﻿@{
+    List<User> users = Model;
+}
+
+<html>
+<head>
+    <title>User List</title>
+</head>
+<body>
+    <h2>User List</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>First Name</th>
+                <th>Lastname</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Address ID</th>
+                <th>Active Date</th>
+                <th>Inactive Date</th>
+                <th>Theme Color</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.UserID</td>
+                    <td>@user.Username</td>
+                    <td>@user.Password</td>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.Phone</td>
+                    <td>@user.Email</td>
+                    <td>@user.AddressID</td>
+                    <td>@user.ActiveDate</td>
+                    <td>@user.InactiveDate</td>
+                    <td>@user.ThemeColor</td>
+
+                    <td>
+                        <button class="btn btn-warning" asp-action="EAAddressEditView" name="@user.UserID">Edit</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: lightblue;
+    }
+
+    tbody > tr:hover {
+        background-color: #f5f5f5;
+    }
+
+</style>

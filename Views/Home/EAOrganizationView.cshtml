@@ -18,7 +18,7 @@
                 <th>Logo File Path</th>
                 <th>Address ID</th>
                 <th>Theme Color</th>
-
+                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -31,6 +31,10 @@
                     <td>@organization.LogoFile</td>
                     <td>@organization.AddressId</td>
                     <td>@organization.ThemeColor</td>
+
+                    <td>
+                        <button class="btn btn-warning" asp-action="EAAddressEditView" name="@organization.OrganizationId">Edit</button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -49,8 +53,12 @@
         text-align: left;
         border: 1px solid #ddd;
     }
+    th {
+        background-color: lightblue;
+    }
 
     tbody > tr:hover {
         background-color: #f5f5f5;
     }
+
 </style>
