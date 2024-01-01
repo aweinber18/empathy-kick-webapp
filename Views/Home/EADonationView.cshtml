@@ -24,21 +24,21 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var donation in Model.Donations)
+            @foreach (var donation in donations)
             {
                 <tr>
                     <td>@donation.ReceiptNumber</td>
-                    <td>@donation.Timestamp</td>
+                    <td>@donation.Timestamp?.ToString("yyyy-MM-dd")</td>
                     <td>@donation.OrganizationId</td>
                     <td>@donation.DonorFullName</td>
-                    <td>$@donation.Amount</td>
+                    <td>@donation.Amount</td>
                     <td>@donation.PaymentMethod</td>
                     <td>@donation.UserId</td>
                     <td>@donation.CardId</td>
                     <td>@donation.Frequency</td>
-
                 </tr>
             }
+
         </tbody>
     </table>
 </body>
