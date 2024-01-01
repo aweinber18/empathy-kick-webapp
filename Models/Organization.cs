@@ -23,6 +23,7 @@ namespace EmpathyKick.Models
         public int? TaxId { get; set; }
         public string LogoFile { get; set; }
         public string? ThemeColor { get; set; }
+        public virtual Donations Donations { get; set; }
     }
 
 }
