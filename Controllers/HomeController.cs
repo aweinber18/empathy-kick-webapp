@@ -7,6 +7,7 @@ using System.Net;
 using EmpathyKick.Data;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using Microsoft.CodeAnalysis;
 
 namespace EmpathyKick.Controllers
 {
@@ -383,8 +384,7 @@ namespace EmpathyKick.Controllers
         }
         public IActionResult EADonationView()
         { 
-            List<Donations> donations = _context.Donation.ToList();
-            return View(donations); 
+            return View(_context); 
         }
         public IActionResult EAAddressView()
         {
@@ -394,6 +394,43 @@ namespace EmpathyKick.Controllers
         public IActionResult EACCView() 
         { 
             return View(); 
+        }
+        [HttpPost]
+        public ActionResult UpdateDonation(Donations updatedDonation)
+        {
+            using (_context)
+            {
+                try
+                {
+                    // Assuming ReceiptNumber is the primary key
+                    var existingDonation = _context.Donation.FirstOrDefault(d => d.ReceiptNumber == updatedDonation.ReceiptNumber);
+
+                    if (existingDonation != null)
+                    {
+                        // Update the existing donation entity with the new values
+                        existingDonation.Timestamp = updatedDonation.Timestamp;
+                        existingDonation.OrganizationId = updatedDonation.OrganizationId;
+                        existingDonation.DonorFullName = updatedDonation.DonorFullName;
+                        existingDonation.Amount = updatedDonation.Amount;
+                        existingDonation.PaymentMethod = updatedDonation.PaymentMethod;
+                        existingDonation.UserId = updatedDonation.UserId;
+                        existingDonation.CardId = updatedDonation.CardId;
+                        existingDonation.Frequency = updatedDonation.Frequency;
+
+                        _context.SaveChanges();
+
+                        return Json(new { success = true, message = "Donation updated successfully" });
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "Donation not found" });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = $"Error updating donation: {ex.Message}" });
+                }
+            }
         }
 
     }

@@ -1,10 +1,16 @@
 ﻿@{
-    List<Donations> donations = Model;
+    MyDBContext _context = Model;
+    List<Donations> donations = _context.Donation.ToList();
 }
 
 <html>
 <head>
     <title>Donation List</title>
+    <style>
+        .edit-mode {
+            background-color: #FFFFCC; /* Add a background color to indicate edit mode */
+        }
+    </style>
 </head>
 <body>
     <h2>Donation List</h2>
@@ -21,6 +27,7 @@
                 <th>User ID</th>
                 <th>Card ID</th>
                 <th>Frequency</th>
+                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -36,13 +43,83 @@
                     <td>@donation.UserId</td>
                     <td>@donation.CardId</td>
                     <td>@donation.Frequency</td>
+                    <td>
+                        <button onclick="editRow(this)">Edit</button>
+                        <button style="display:none;" onclick="saveRow(this, @donation.ReceiptNumber)">Save</button>
+                    </td>
                 </tr>
             }
-
         </tbody>
     </table>
+
+    <script>
+        function editRow(button) {
+            var row = button.parentNode.parentNode;
+            row.classList.add("edit-mode");
+            var cells = row.getElementsByTagName("td");
+
+            for (var i = 0; i < cells.length - 1; i++) { // Exclude the last cell with buttons
+                var cell = cells[i];
+                var value = cell.innerText;
+                cell.innerHTML = "<input type='text' value='" + value + "'>";
+            }
+
+            // Toggle buttons
+            button.style.display = "none";
+            button.nextElementSibling.style.display = "inline-block";
+        }
+
+        function saveRow(button, receiptNumber) {
+            var row = button.parentNode.parentNode;
+            row.classList.remove("edit-mode");
+            var cells = row.getElementsByTagName("td");
+
+            var updatedDonation = {
+                ReceiptNumber: parseInt(receiptNumber),
+                Timestamp: new Date(cells[1].firstChild.value), // Convert the input value to a Date object
+                OrganizationId: parseInt(cells[2].firstChild.value),
+                DonorFullName: cells[3].firstChild.value,
+                Amount: parseFloat(cells[4].firstChild.value), // Convert the input value to a float
+                PaymentMethod: cells[5].firstChild.value,
+                UserId: parseInt(cells[6].firstChild.value),
+                CardId: parseInt(cells[7].firstChild.value),
+                Frequency: cells[8].firstChild.value,
+
+                Organization: null,
+                User: null,
+                Card: null
+            };
+
+            fetch('/Home/UpdateDonation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ updatedDonation: updatedDonation }), // Wrap the object in a property
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response from the server as needed
+                    console.log('Success:', data);
+
+                    // If the update was successful, update the displayed values
+                    if (data.success) {
+                        for (var i = 1; i < cells.length - 1; i++) {
+                            cells[i].innerText = cells[i].firstChild.value;
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+
+            button.style.display = "none";
+            button.previousElementSibling.style.display = "inline-block";
+        }
+    </script>
 </body>
 </html>
+
 
 <style>
     table {
