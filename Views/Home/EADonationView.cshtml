@@ -51,7 +51,7 @@
             }
         </tbody>
     </table>
-
+    @section Scripts {
     <script>
         function editRow(button) {
             var row = button.parentNode.parentNode;
@@ -89,34 +89,47 @@
                 User: null,
                 Card: null
             };
+            var updatedDonationJSONString = JSON.stringify(updatedDonation);
+            // fetch('/Home/UpdateDonation', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({ updatedDonation: updatedDonation }), Wrap the object in a property
+            // })
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         Handle the response from the server as needed
+            //         console.log('Success:', data);
 
-            fetch('/Home/UpdateDonation', {
+            //         If the update was successful, update the displayed values
+            //         if (data.success) {
+            //             for (var i = 1; i < cells.length - 1; i++) {
+            //                 cells[i].innerText = cells[i].firstChild.value;
+            //             }
+            //         }
+            //     })
+            //     .catch((error) => {
+            //         console.error('Error:', error);
+            //     });
+            $.ajax({
+                url: '/Home/UpdateDonation',
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+                data: { updatedDonation: updatedDonation },
+                success: function (data) {
+                    location.reload();
                 },
-                body: JSON.stringify({ updatedDonation: updatedDonation }), // Wrap the object in a property
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // Handle the response from the server as needed
-                    console.log('Success:', data);
+                error: function (error) {
+                    console.error('Error updating row:', error);
+                }
+            });
 
-                    // If the update was successful, update the displayed values
-                    if (data.success) {
-                        for (var i = 1; i < cells.length - 1; i++) {
-                            cells[i].innerText = cells[i].firstChild.value;
-                        }
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
 
             button.style.display = "none";
             button.previousElementSibling.style.display = "inline-block";
         }
     </script>
+    }
 </body>
 </html>
 

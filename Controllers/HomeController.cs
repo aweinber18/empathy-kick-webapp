@@ -398,6 +398,7 @@ namespace EmpathyKick.Controllers
         [HttpPost]
         public ActionResult UpdateDonation(Donations updatedDonation)
         {
+            //Donations test = JSON. updatedDonation;
             using (_context)
             {
                 try
