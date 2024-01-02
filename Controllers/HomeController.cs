@@ -388,9 +388,9 @@ namespace EmpathyKick.Controllers
         {
             return View(_context); 
         }
-        public IActionResult EACCView() 
+        public IActionResult EACardView() 
         { 
-            return View(); 
+            return View(_context); 
         }
         [HttpPost]
         public ActionResult EAUpdateDonation(Donations updatedDonation)
@@ -596,6 +596,39 @@ namespace EmpathyKick.Controllers
                 catch (Exception ex)
                 {
                     return Json(new { success = false, message = $"Error updating OrganizationAdmin: {ex.Message}" });
+                }
+            }
+        }
+        [HttpPost]
+        public ActionResult UpdateCard(Card updatedCard)
+        {
+            using (_context)
+            {
+                try
+                {
+                    // Assuming CardID is the primary key
+                    var existingCard = _context.Card.FirstOrDefault(c => c.CardID == updatedCard.CardID);
+
+                    if (existingCard != null)
+                    {
+                        // Update the existing Card entity with the new values
+                        existingCard.CardNum = updatedCard.CardNum;
+                        existingCard.CardExp = updatedCard.CardExp;
+                        existingCard.CardSecurity = updatedCard.CardSecurity;
+                        existingCard.AddressID = updatedCard.AddressID;
+
+                        _context.SaveChanges();
+
+                        return Json(new { success = true, message = "Card updated successfully" });
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "Card not found" });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = $"Error updating card: {ex.Message}" });
                 }
             }
         }

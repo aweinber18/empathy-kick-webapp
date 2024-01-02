@@ -10,7 +10,6 @@ namespace EmpathyKick.Models
         public DateTime? CardExp {  get; set; }
         public string? CardSecurity { get; set; }
         public int? AddressID { get; set; }
-
         public virtual Donations Donations { get; set; }
     }
 }
