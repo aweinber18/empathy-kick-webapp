@@ -269,7 +269,7 @@ namespace EmpathyKick.Controllers
             return View(theUser);
         }
 
-        [HttpPost] 
+        [HttpPost]
         public ActionResult UpdateUser(User updatedUser)
         {
             User notUpdated = _context.User.Find(updatedUser.UserID);
@@ -366,8 +366,7 @@ namespace EmpathyKick.Controllers
         }
         public IActionResult EAUserView() 
         { 
-            List<User> users = _context.User.ToList();
-            return View(users);
+            return View(_context);
         }
         public IActionResult EAEAView() 
         { 
@@ -379,8 +378,7 @@ namespace EmpathyKick.Controllers
         }
         public IActionResult EAOrganizationView() 
         {
-            List<Organization> organizations = _context.Organization.ToList();
-            return View(organizations); 
+            return View(_context); 
         }
         public IActionResult EADonationView()
         { 
@@ -388,17 +386,15 @@ namespace EmpathyKick.Controllers
         }
         public IActionResult EAAddressView()
         {
-            List<Addresses> addresses = _context.Address.ToList();
-            return View(addresses); 
+            return View(_context); 
         }
         public IActionResult EACCView() 
         { 
             return View(); 
         }
         [HttpPost]
-        public ActionResult UpdateDonation(Donations updatedDonation)
+        public ActionResult EAUpdateDonation(Donations updatedDonation)
         {
-            //Donations test = JSON. updatedDonation;
             using (_context)
             {
                 try
@@ -430,6 +426,112 @@ namespace EmpathyKick.Controllers
                 catch (Exception ex)
                 {
                     return Json(new { success = false, message = $"Error updating donation: {ex.Message}" });
+                }
+            }
+        }
+        [HttpPost]
+        public ActionResult EAUpdateOrganization(Organization updatedOrganization)
+        {
+            using (_context)
+            {
+                try
+                {
+                    // Assuming OrganizationId is the primary key
+                    var existingOrganization = _context.Organization.FirstOrDefault(o => o.OrganizationId == updatedOrganization.OrganizationId);
+
+                    if (existingOrganization != null)
+                    {
+                        // Update the existing organization entity with the new values
+                        existingOrganization.OrganizationName = updatedOrganization.OrganizationName;
+                        existingOrganization.TaxId = updatedOrganization.TaxId;
+                        existingOrganization.LogoFile = updatedOrganization.LogoFile;
+                        existingOrganization.AddressId = updatedOrganization.AddressId;
+                        existingOrganization.ThemeColor = updatedOrganization.ThemeColor;
+
+                        _context.SaveChanges();
+
+                        return Json(new { success = true, message = "Organization updated successfully" });
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "Organization not found" });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = $"Error updating organization: {ex.Message}" });
+                }
+            }
+        }
+        [HttpPost]
+        public ActionResult EAUpdateAddress(Addresses updatedAddress)
+        {
+            using (_context)
+            {
+                try
+                {
+                    // Assuming AddressId is the primary key
+                    var existingAddress = _context.Address.FirstOrDefault(a => a.AddressId == updatedAddress.AddressId);
+
+                    if (existingAddress != null)
+                    {
+                        // Update the existing address entity with the new values
+                        existingAddress.Address = updatedAddress.Address;
+                        existingAddress.City = updatedAddress.City;
+                        existingAddress.Region = updatedAddress.Region;
+                        existingAddress.Country = updatedAddress.Country;
+
+                        _context.SaveChanges();
+
+                        return Json(new { success = true, message = "Address updated successfully" });
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "Address not found" });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = $"Error updating address: {ex.Message}" });
+                }
+            }
+        }
+        [HttpPost]
+        public ActionResult EAUpdateUser(User updatedUser)
+        {
+            using (_context)
+            {
+                try
+                {
+                    // Assuming UserID is the primary key
+                    var existingUser = _context.User.FirstOrDefault(u => u.UserID == updatedUser.UserID);
+
+                    if (existingUser != null)
+                    {
+                        // Update the existing user entity with the new values
+                        existingUser.Username = updatedUser.Username;
+                        existingUser.Password = updatedUser.Password;
+                        existingUser.FirstName = updatedUser.FirstName;
+                        existingUser.LastName = updatedUser.LastName;
+                        existingUser.Phone = updatedUser.Phone;
+                        existingUser.Email = updatedUser.Email;
+                        existingUser.AddressID = updatedUser.AddressID;
+                        existingUser.ActiveDate = updatedUser.ActiveDate;
+                        existingUser.InactiveDate = updatedUser.InactiveDate;
+                        existingUser.ThemeColor = updatedUser.ThemeColor;
+
+                        _context.SaveChanges();
+
+                        return Json(new { success = true, message = "User updated successfully" });
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "User not found" });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = $"Error updating user: {ex.Message}" });
                 }
             }
         }

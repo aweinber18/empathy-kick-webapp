@@ -1,5 +1,6 @@
 ﻿@{
-    List<Organization> organizations = Model;
+    MyDBContext _context = Model;
+    List<Organization> organizations = _context.Organization.ToList();
 }
 
 <html>
@@ -33,12 +34,65 @@
                     <td>@organization.ThemeColor</td>
 
                     <td>
-                        <button class="btn btn-warning" asp-action="EAAddressEditView" name="@organization.OrganizationId">Edit</button>
+                        <button onclick="editRow(this)">Edit</button>
+                        <button style="display:none;" onclick="saveRow(this, @organization.OrganizationId)">Save</button>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+
+    @section Scripts {
+        <script>
+            function editRow(button) {
+                var row = button.parentNode.parentNode;
+                row.classList.add("edit-mode");
+                var cells = row.getElementsByTagName("td");
+
+                for (var i = 1; i < cells.length - 1; i++) { // Exclude the first and last cell with buttons
+                    var cell = cells[i];
+                    var value = cell.innerText;
+                    cell.innerHTML = "<input type='text' value='" + value + "'>";
+                }
+
+                // Toggle buttons
+                button.style.display = "none";
+                button.nextElementSibling.style.display = "inline-block";
+            }
+
+            function saveRow(button, organizationId) {
+                var row = button.parentNode.parentNode;
+                row.classList.remove("edit-mode");
+                var cells = row.getElementsByTagName("td");
+
+                var updatedOrganization = {
+                    OrganizationId: parseInt(organizationId),
+                    OrganizationName: cells[1].firstChild.value,
+                    TaxId: cells[2].firstChild.value,
+                    LogoFile: cells[3].firstChild.value,
+                    AddressId: cells[4].firstChild.value,
+                    ThemeColor: cells[5].firstChild.value
+                };
+                var updatedOrganizationJSONString = JSON.stringify(updatedOrganization);
+
+                $.ajax({
+                    url: '/Home/EAUpdateOrganization',
+                    method: 'POST',
+                    data: { updatedOrganization: updatedOrganization },
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function (error) {
+                        console.error('Error updating row:', error);
+                    }
+                });
+
+                button.style.display = "none";
+                button.previousElementSibling.style.display = "inline-block";
+            }
+        </script>
+    }
+
 </body>
 </html>
 
