@@ -368,13 +368,13 @@ namespace EmpathyKick.Controllers
         { 
             return View(_context);
         }
-        public IActionResult EAEAView() 
+        public IActionResult EAEmpathyAdminView() 
         { 
-            return View(); 
+            return View(_context); 
         }
-        public IActionResult EAOAView() 
+        public IActionResult EAOrganizationAdminView() 
         { 
-            return View(); 
+            return View(_context); 
         }
         public IActionResult EAOrganizationView() 
         {
@@ -532,6 +532,70 @@ namespace EmpathyKick.Controllers
                 catch (Exception ex)
                 {
                     return Json(new { success = false, message = $"Error updating user: {ex.Message}" });
+                }
+            }
+        }
+        [HttpPost]
+        public ActionResult UpdateEmpathyAdmin(EmpathyAdmin updatedEmpathyAdmin)
+        {
+            using (_context)
+            {
+                try
+                {
+                    // Assuming UserID is the primary key
+                    var existingEmpathyAdmin = _context.EmpathyAdmin.FirstOrDefault(e => e.UserID == updatedEmpathyAdmin.UserID);
+
+                    if (existingEmpathyAdmin != null)
+                    {
+                        // Update the existing EmpathyAdmin entity with the new values
+                        existingEmpathyAdmin.AuthorizationDate = updatedEmpathyAdmin.AuthorizationDate;
+                        existingEmpathyAdmin.DeauthorizationDate = updatedEmpathyAdmin.DeauthorizationDate;
+
+                        _context.SaveChanges();
+
+                        return Json(new { success = true, message = "EmpathyAdmin updated successfully" });
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "EmpathyAdmin not found" });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = $"Error updating EmpathyAdmin: {ex.Message}" });
+                }
+            }
+        }
+        [HttpPost]
+        public ActionResult UpdateOrganizationAdmin(OrganizationAdmin updatedOrganizationAdmin)
+        {
+            using (_context)
+            {
+                try
+                {
+                    // Assuming UserID and OrganizationID are part of the composite primary key
+                    var existingOrganizationAdmin = _context.OrganizationAdmin.FirstOrDefault(oa =>
+                        oa.UserID == updatedOrganizationAdmin.UserID &&
+                        oa.OrganizationID == updatedOrganizationAdmin.OrganizationID);
+
+                    if (existingOrganizationAdmin != null)
+                    {
+                        // Update the existing OrganizationAdmin entity with the new values
+                        existingOrganizationAdmin.AuthorizationDate = updatedOrganizationAdmin.AuthorizationDate;
+                        existingOrganizationAdmin.DeauthorizationDate = updatedOrganizationAdmin.DeauthorizationDate;
+
+                        _context.SaveChanges();
+
+                        return Json(new { success = true, message = "OrganizationAdmin updated successfully" });
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "OrganizationAdmin not found" });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = $"Error updating OrganizationAdmin: {ex.Message}" });
                 }
             }
         }
