@@ -317,11 +317,11 @@ namespace EmpathyKick.Controllers
             return View("EATableSelectionView", _context);
         }
         [HttpPost]
-        public IActionResult Donate(double donationAmount, Organization organization)
+        public IActionResult Donate(int donationAmount, Organization organization)
         {
             
                 Donations newDonation = new Donations();
-                newDonation.Amount = (int)donationAmount;
+                newDonation.Amount = donationAmount;
                 newDonation.OrganizationId = organization.OrganizationId;
                 _context.Donation.Add(newDonation);
                 _context.SaveChanges();

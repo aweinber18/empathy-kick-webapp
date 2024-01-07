@@ -20,7 +20,7 @@
 </form>
 <script>
     document.getElementById('donate-button').addEventListener('click', function () {
-        var donationAmount = parseFloat(document.getElementById('donationAmount').value);
+        var donationAmount = parseInt(document.getElementById('donationAmount').value);
        
         $.ajax({
             type: 'POST',
