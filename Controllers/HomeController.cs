@@ -88,7 +88,7 @@ namespace EmpathyKick.Controllers
         [HttpPost]
         public IActionResult Register(User user, Addresses address, string checkboxState)
         {
-           
+
             var get_user = _context.User.FirstOrDefault(p => p.Username == user.Username);
             if (get_user == null)
             {
@@ -130,8 +130,8 @@ namespace EmpathyKick.Controllers
                     }
                 }
 
-                }
-                else
+            }
+            else
             {
                 ViewBag.Message = "Username '" + user.Username + "' already exists ";
                 return View();
@@ -268,11 +268,11 @@ namespace EmpathyKick.Controllers
             return View(theUser);
         }
 
-        [HttpPost] 
+        [HttpPost]
         public ActionResult UpdateUser(User updatedUser)
         {
             User notUpdated = _context.User.Find(updatedUser.UserID);
-            if (notUpdated != null) 
+            if (notUpdated != null)
             {
                 notUpdated.Username = updatedUser.Username;
                 notUpdated.Password = updatedUser.Password;
@@ -282,27 +282,27 @@ namespace EmpathyKick.Controllers
                 notUpdated.Email = updatedUser.Email;
                 notUpdated.ThemeColor = updatedUser.ThemeColor;
 
-                if(updatedUser.Address != null) 
+                if (updatedUser.Address != null)
                 {
                     notUpdated.Address = updatedUser.Address;
-              
-                if(updatedUser.Address.Address !=  null)
-                {
-                    notUpdated.Address.Address = updatedUser.Address.Address;
-                }
-                if(updatedUser.Address.City != null)
-                {
-                    notUpdated.Address.City = updatedUser.Address.City;
-                }
-                if(updatedUser.Address.Region != null)
-                {
-                    notUpdated.Address.Region = updatedUser.Address.Region;
-                }
-                if(updatedUser.Address.Country != null)
-                {
-                    notUpdated.Address.Country = updatedUser.Address.Country;
-                }
-                  } else
+
+                    if (updatedUser.Address.Address != null)
+                    {
+                        notUpdated.Address.Address = updatedUser.Address.Address;
+                    }
+                    if (updatedUser.Address.City != null)
+                    {
+                        notUpdated.Address.City = updatedUser.Address.City;
+                    }
+                    if (updatedUser.Address.Region != null)
+                    {
+                        notUpdated.Address.Region = updatedUser.Address.Region;
+                    }
+                    if (updatedUser.Address.Country != null)
+                    {
+                        notUpdated.Address.Country = updatedUser.Address.Country;
+                    }
+                } else
                 {
                     notUpdated.Address = null;
                 }
@@ -311,34 +311,25 @@ namespace EmpathyKick.Controllers
             }
             return View(UpdateUser);
         }
-            public IActionResult EATableSelectionView()
+        public IActionResult EATableSelectionView()
         {
-          //pass in the context to the view so that we can access the database
-            return View("EATableSelectionView",_context);
+            //pass in the context to the view so that we can access the database
+            return View("EATableSelectionView", _context);
         }
         [HttpPost]
         public IActionResult Donate(double donationAmount, Organization organization)
         {
-            try
-            {
-                // Update the database - Replace this with your logic
-                var organization = _context.Organization.FirstOrDefault(); // Replace with your query
-                if (organization != null)
-                {
-                    organization.TotalDonations += donationAmount;
-                    _context.SaveChanges();
-                    return Json(new { success = true, newTotalDonations = organization.TotalDonations });
-                }
-                else
-                {
-                    return Json(new { success = false });
-                }
+            
+                Donations newDonation = new Donations();
+                newDonation.Amount = (int)donationAmount;
+                newDonation.OrganizationId = organization.OrganizationId;
+                _context.Donation.Add(newDonation);
+                _context.SaveChanges();
+
+                return Json(new { success = true });
             }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, error = ex.Message });
-            }
-        }
+        
+
 
         public IActionResult EAColumnSelectionView()
         {
