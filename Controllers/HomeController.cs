@@ -326,6 +326,8 @@ namespace EmpathyKick.Controllers
                 Donations newDonation = new Donations();
                 newDonation.Amount = donationAmount;
                 newDonation.OrganizationId = organizationID;
+                newDonation.Timestamp = DateTime.Now;
+                newDonation.ReceiptNumber = 613;
                 _context.Donation.Add(newDonation);
                 _context.SaveChanges();
 
