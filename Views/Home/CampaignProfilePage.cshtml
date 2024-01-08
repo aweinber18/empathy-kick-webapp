@@ -1,6 +1,7 @@
 ﻿@{
-	ViewData["Title"] = ViewData["OrganizationName"];
-	Organization myOrg = Model;
+    ViewData["Title"] = ViewData["OrganizationName"];
+    Organization myOrg = Model;
+    ViewData["OrgID"] = myOrg.OrganizationId;
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -17,23 +18,20 @@
     <label for="donationAmount">Enter Donation Amount: $</label>
     <input type="number" id="donationAmount" name="donationAmount" step="0.01" required>
 
-    <button type="button" class="round-button" id="donater">Donate Now!</button>
+    <button type="button" onclick="handleDonation(document.getElementById('donationForm'), 'EmpathyKick.Models.Organization')" class="round-button" id="donater">Donate Now!</button>
 </form>
 
 <script>
-    document.getElementById('donater').addEventListener('click', function () {
-        console.log('Button clicked');
-
-        var donationAmount = parseInt(document.getElementById('donationAmount').value);
-
-        console.log('Sending AJAX request with donationAmount:', donationAmount);
+    function handleDonation(form, organization) {
+        console.log('Sending AJAX request with donationAmount:', form.elements['donationAmount'].value);
+        var donationAmount = parseFloat(form.elements['donationAmount'].value);
 
         $.ajax({
             type: 'POST',
-            url: '@Url.Action("Donate", "Home")',
+            url: '/Home/DonateHandler',
             data: {
                 donationAmount: donationAmount,
-                organization: myOrg
+                organization: organization
             },
             success: function (data) {
                 console.log('AJAX request successful. Response:', data);
@@ -49,7 +47,7 @@
                 console.error('Error donating', error);
             }
         });
-    });
+    }
 </script>
 
 <div id="paypal-donate-button-container"></div>
