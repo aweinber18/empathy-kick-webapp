@@ -317,18 +317,27 @@ namespace EmpathyKick.Controllers
             return View("EATableSelectionView", _context);
         }
         [HttpPost]
-        public IActionResult Donate(int donationAmount, Organization organization)
+        public ActionResult DonateHandler(int donationAmount, Organization organization)
         {
-            
+            Console.WriteLine("dsfsdsfsdsfs");
+            Console.ReadLine();
+
+            try
+            {
                 Donations newDonation = new Donations();
                 newDonation.Amount = donationAmount;
                 newDonation.OrganizationId = organization.OrganizationId;
                 _context.Donation.Add(newDonation);
                 _context.SaveChanges();
 
-                return Json(new { success = true });
+                return Json(new { success = true});
             }
-        
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
 
 
         public IActionResult EAColumnSelectionView()

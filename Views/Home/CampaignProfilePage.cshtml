@@ -12,31 +12,36 @@
 <h3>Amount Raised: @ViewData["amountDonated"]</h3>
 
 <!-- Donation Form -->
-<<form id="donationForm">
+<!-- Donation Form -->
+<form id="donationForm">
     <label for="donationAmount">Enter Donation Amount: $</label>
     <input type="number" id="donationAmount" name="donationAmount" step="0.01" required>
 
-    <button type="button" class="round-button" id="donate-button">Donate Now!</button>
+    <button type="button" class="round-button" id="donater">Donate Now!</button>
 </form>
+
 <script>
-    document.getElementById('donate-button').addEventListener('click', function () {
+    document.getElementById('donater').addEventListener('click', function () {
+        console.log('Button clicked');
+
         var donationAmount = parseInt(document.getElementById('donationAmount').value);
-       
+
+        console.log('Sending AJAX request with donationAmount:', donationAmount);
+
         $.ajax({
             type: 'POST',
-            url: '@Url.Action("Donate", "Home")',
-            data: { donationAmount: donationAmount,
-                   organization: myOrg
+            url: '@Url.Action("Donate", "HomeControllerssd")',
+            data: {
+                donationAmount: donationAmount,
+                organization: myOrg
             },
             success: function (data) {
+                console.log('AJAX request successful. Response:', data);
+
                 if (data.success) {
-                    // Update the UI with the new total donation amount
                     alert('Donation successful!');
                     window.location.reload();
-                    // Optionally update the UI with the new total donation amount
-             
-             ViewData["amountDonated"] = ViewData["amountDonated"] + donationAmount;
-         } else {
+                } else {
                     alert('Donation failed. Please try again.');
                 }
             },
@@ -46,6 +51,7 @@
         });
     });
 </script>
+
 <div id="paypal-donate-button-container"></div>
 
 <script>
@@ -64,3 +70,21 @@
 
    
 </script>
+
+<style>
+    .round-button {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 50%;
+        background-color: #3498db; /* Blue background color */
+        color: #555; /* Grey text color */
+        text-decoration: none;
+        text-align: center;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .round-button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+</style>
