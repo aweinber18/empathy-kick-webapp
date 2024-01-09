@@ -6,6 +6,7 @@
 <html>
 <head>
     <title>User List</title>
+    <link rel="stylesheet" type="text/css" href="~/css/tables.css">
 </head>
 <body>
     <h2>User List</h2>
@@ -44,8 +45,8 @@
                     <td>@user.ThemeColor</td>
 
                     <td>
-                        <button onclick="editRow(this)">Edit</button>
-                        <button style="display:none;" onclick="saveRow(this, @user.UserID)">Save</button>
+                        <button class="btn btn-warning rounded" onclick="editRow(this)">Edit</button>
+                        <button class="btn btn-success rounded" style="display:none;" onclick="saveRow(this, @user.UserID)">Save</button>
                     </td>
                 </tr>
             }
@@ -111,25 +112,3 @@
 
 </body>
 </html>
-
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th, td {
-        padding: 8px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
-
-    th {
-        background-color: lightblue;
-    }
-
-    tbody > tr:hover {
-        background-color: #f5f5f5;
-    }
-
-</style>

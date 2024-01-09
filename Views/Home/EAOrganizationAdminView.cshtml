@@ -6,6 +6,7 @@
 <html>
 <head>
     <title>OrganizationAdmin List</title>
+    <link rel="stylesheet" type="text/css" href="~/css/tables.css">
 </head>
 <body>
     <h2>OrganizationAdmin List</h2>
@@ -30,7 +31,7 @@
                     <td>@organizationAdmin.DeauthorizationDate</td>
 
                     <td>
-                        <button onclick="editRow(this)">Edit</button>
+                        <button class="btn btn-warning rounded" onclick="editRow(this)">Edit</button>
                         <button style="display:none;" onclick="saveRow(this, @organizationAdmin.UserID, @organizationAdmin.OrganizationID)">Save</button>
                     </td>
                 </tr>

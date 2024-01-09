@@ -6,6 +6,7 @@
 <html>
 <head>
     <title>Donation List</title>
+    <link rel="stylesheet" type="text/css" href="~/css/tables.css">
 </head>
 <body>
     <h2>Donation List</h2>
@@ -39,8 +40,8 @@
                     <td>@donation.CardId</td>
                     <td>@donation.Frequency</td>
                     <td>
-                        <button onclick="editRow(this)">Edit</button>
-                        <button style="display:none;" onclick="saveRow(this, @donation.ReceiptNumber)">Save</button>
+                        <button class="btn btn-warning rounded" onclick="editRow(this)">Edit</button>
+                        <button class="btn btn-success rounded" style="display:none;" onclick="saveRow(this, @donation.ReceiptNumber)">Save</button>
                     </td>
                 </tr>
             }
@@ -107,25 +108,3 @@
     }
 </body>
 </html>
-
-
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th, td {
-        padding: 8px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
-
-    tbody > tr:hover {
-        background-color: #f5f5f5;
-    }
-
-    .edit-mode {
-        background-color: #FFFFCC; /* Add a background color to indicate edit mode */
-    }
-</style>
