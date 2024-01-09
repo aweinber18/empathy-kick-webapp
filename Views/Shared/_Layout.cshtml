@@ -35,9 +35,9 @@
                         </li>
                         @if (@Context.Session.GetString("EmpathyAdmin") == "True")
                         {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="EATableSelectionView">View Data</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="EADataSelection">View Data</a>
+                            </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PendingEAView">Pending EAs</a>
                         </li>

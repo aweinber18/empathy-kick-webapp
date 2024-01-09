@@ -38,6 +38,6 @@ namespace EmpathyKick.Models
 
         [ForeignKey("AddressID")]
         public Addresses? Address { get; set; }
-
+        public virtual Donations Donations { get; set; }
     }
 }
