@@ -71,6 +71,7 @@
                     data: { updatedEmpathyAdmin: updatedEmpathyAdmin },
                     success: function (data) {
                         location.reload();
+                        alert("Changes have been saved.");
                     },
                     error: function (error) {
                         console.error('Error updating row:', error);
